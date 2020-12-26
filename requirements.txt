@@ -1,0 +1,6 @@
+telethon
+spotipy
+discord.py
+pyGithub
+pytz
+Pillow

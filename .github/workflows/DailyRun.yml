@@ -1,0 +1,104 @@
+name: Daily Run
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  RunScripts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Sync Time
+        run: |
+          sudo apt-get install ntpdate
+          NEEDS_SYNC=1
+          while [ "$NEEDS_SYNC" -ne "0" ]; do
+              sudo ntpdate -t 4     0.ca.pool.ntp.org
+              NEEDS_SYNC=$?    # If this variable is set ot 0, time sync worked
+              sleep 2
+          done
+          date +%H:%M:%S
+
+      - name: Write config.py
+        run: |
+          if [ -f config.py ]; then rm -f "config.py"; fi
+          echo "TELEID      =\"${{ secrets.TELEID }}\""       >>config.py
+          echo "TELEHASH    =\"${{ secrets.TELEHASH }}\""     >>config.py
+          echo "TELEST      =\"${{ secrets.TELEST }}\""       >>config.py
+          echo "SPOTIPYID   =\"${{ secrets.SPOTIPYID }}\""    >>config.py
+          echo "SPOTIPYHS   =\"${{ secrets.SPOTIPYHS }}\""    >>config.py
+          echo "SPOTIPYRU   =\"${{ secrets.SPOTIPYRU }}\""    >>config.py
+          echo "SPOTIPYSC   =\"${{ secrets.SPOTIPYSC }}\""    >>config.py
+          echo "SPOTIPYUN   =\"${{ secrets.SPOTIPYUN }}\""    >>config.py
+          echo "SPOTIPYTG   =\"${{ secrets.SPOTIPYTG }}\""    >>config.py
+          echo "SPOTIPYSP   =\"${{ secrets.SPOTIPYSP }}\""    >>config.py
+          echo "SPOTIPYCACHE='${{ secrets.SPOTIPYCACHE }}'" >>config.py
+          echo "GISTTOKEN   =\"${{ secrets.GISTTOKEN }}\""    >>config.py
+          echo "GISTID      =\"${{ secrets.GISTID }}\""       >>config.py
+          echo "DCTOKEN     =\"${{ secrets.DCTOKEN }}\""      >>config.py
+          echo "DCGUILD     =\"${{ secrets.DCGUILD }}\""      >>config.py
+
+          echo Wrote TELEID, TELEHASH, TELEST, GISTTOKEN, GISTID, DCTOKEN, DCGUILD
+          echo SPOTIPYUN, SPOTIPYTG, SPOTIPYSP, SPOTIPYID, SPOTIPYHS, SPOTIPYRU, SPOTIPYSC, SPOTIPYCACHE
+
+      - name: Display Python version
+        run: |
+          python -c "import sys; print(sys.version)"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Lofi
+        run: |
+          python LoFi.py
+        if: always()
+
+      - name: Run Dubstep
+        run: |
+          python Dubstep.py
+        if: always()
+
+      - name: Run Daily Song
+        run: |
+          python DailySong.py
+        if: always()
+
+      - name: Run Backup
+        run: |
+          python Backup.py
+        if: always()
+
+      - name: Cleanup
+        run: if [ -f config.py ]; then rm -f "config.py"; fi
+        if: always()
+
+      - name: Archive Logs
+        uses: actions/upload-artifact@v2
+        with:
+          name: DailyPy_Logs
+          path: |
+            logs
+            !dist/**/*.md
