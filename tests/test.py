@@ -1,6 +1,5 @@
 import datetime
 import time
-import typing
 import unittest
 
 import DailySong
@@ -29,8 +28,10 @@ class unit_tests(unittest.TestCase):
 
     def test_isTwelvePM_datetime(self):
         DateLike = float, datetime.datetime, datetime.date, datetime.timedelta
-        # self.assertIs(, DateLike)
         self.assertIn(type(DailySong.get_twelve_pm()), DateLike)
+
+    def test_testingOff(self):
+        self.assertFalse(DailySong.test)
 
     def test_zget_playlist(self):
         def timer_wrapper(func, *args, **kwargs):

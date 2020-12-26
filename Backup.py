@@ -40,14 +40,19 @@ def backup_playlist(pl: dict):
                 sendfail(f"Electronic rising doing its thing?\n{e}")
             except Exception as e0:
                 print(f'Couldnt send fail message\n{e0}')
+        except Exception as e:
+            print(f"An error has occured in {track}\n{e}")
 
     try:
-        [SetTracks.append(track["track"]["id"]) for track in Set]
+        for track in Set:
+            SetTracks.append(track["track"]["id"])
     except Exception:
+        print("Something wrong with Set")
         return
 
-    [ToAdd.append(track)
-     if not track in SetTracks else None for track in GetTracks]
+    for track in GetTracks:
+        if track in SetTracks:
+            ToAdd.append(track)
 
     if ToAdd:
         try:

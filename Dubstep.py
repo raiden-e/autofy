@@ -82,6 +82,7 @@ def new_artist(artist):
     except:
         raise f"Please make sure artist {artist} exists"
     x.append(artist['id'])
+    x.sort()
     gist.update(gist_name, x, f"Add artist: {artist['id']} ({artist['name']})")
 
 

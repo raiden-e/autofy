@@ -9,12 +9,12 @@ token = config.GISTTOKEN
 gist = Github(token).get_gist(gist_id)
 
 
-def load(gist_name) -> dict:
+def load(gist_name):
     x = gist.files[gist_name].content
     return json.loads(x)
 
 
-def update(filename: str, input: dict, description: str):
+def update(filename: str, content, description: str):
     if not isinstance(filename, str):
         raise ValueError("playlist_name has to be specified")
     if not isinstance(filename, str):
@@ -23,5 +23,5 @@ def update(filename: str, input: dict, description: str):
     gist.edit(
         description=description,
         files={
-            f'{filename}': InputFileContent(json.dumps(input, indent=2))
+            f'{filename}': InputFileContent(json.dumps(content, indent=2))
         })

@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import BinaryIO, Union
 
 import requests
-import spotipy
 from PIL import Image
 
 from util.spotify import get_spotify_client
@@ -31,31 +30,40 @@ def get_np_pic(url, path: Union[str, Path, BinaryIO]):
         pic.save(path)
 
 
-def now_playing(_spotify: spotipy.Spotify, path: str, old_id=None):
-    if not _spotify:
-        raise TypeError(spotipy.Spotify)
-    if not path:
-        raise TypeError(str)
-    playback = _spotify.current_playback()
-    if playback and playback["is_playing"]:
-        if old_id:
-            new_id = playback["item"]["id"]
-            if new_id == old_id:
-                return (playback["item"]["id"], "Same Song ")
+def try_write(file: str, text: str):
+    try:
+        with open(file, 'w', encoding='utf-8-sig') as f:
+            f.write(text)
+    except Exception as e:
+        print(f"Couldnt write {file}\n{e}")
+
+
+def main(repeat=True):
+    path = get_docs_folder()
+    _spotify = get_spotify_client()
+    old_id = False
+
+    while repeat:
+        time.sleep(4)
+        playback = _spotify.current_playback()
+        if not playback["is_playing"]:
+            print("Playback stopped", end=None)
+            continue
+
+        if playback["item"]["id"] == old_id:
+            print("Same Song -", playback["item"]["id"])
+            continue
 
         old_id = playback["item"]["id"]
-        playback_text = (
-            f"{playback['item']['artists'][0]['name']} - "
-            f"{playback['item']['name']} | Album: "
-            f"{playback['item']['album']['name']}"
-        )
 
-        with open(os.path.join(path, 'SpotifyNP.txt'), 'w') as f:
-            f.write(playback_text)
-        with open(os.path.join(path, 'SpotifyNPTitle.txt'), 'w') as f:
-            f.write(playback['item']['name'])
-        with open(os.path.join(path, 'SpotifyNPartist.txt'), 'w') as f:
-            f.write(playback['item']['artists'][0]['name'])
+        full_text = f"{playback['item']['artists'][0]['name']} - {playback['item']['name']} | Album: {playback['item']['album']['name']}"
+        texts = {
+            'SpotifyNP.txt': full_text,
+            'SpotifyNPTitle.txt': playback['item']['name'],
+            'SpotifyNPartist.txt': playback['item']['artists'][0]['name'],
+        }
+        for key in texts:
+            try_write(os.path.join(path, key[0]), key[1])
 
         get_np_pic(
             playback['item']['album']['images'][0]['url'],
@@ -65,21 +73,7 @@ def now_playing(_spotify: spotipy.Spotify, path: str, old_id=None):
             )
         )
 
-        return [playback["item"]["id"], f"\n{playback_text}"]
-
-    else:
-        return (None, "Not playing")
-
-
-def main(repeat=True):
-    path = get_docs_folder()
-    _spotify = get_spotify_client()
-    result = now_playing(_spotify, path)
-    print(result[1])
-    while repeat:
-        time.sleep(4)
-        result = now_playing(_spotify, path, result[0])
-        print(result[1], end="")
+        print(f"{playback['item']['id']}\n{full_text}")
 
 
 if __name__ == "__main__":

@@ -23,8 +23,10 @@ def get_twelve_pm():
     else:
         twelve_pm = datetime.datetime(
             now.year, now.month, now.day, 12, tzinfo=cest)
-        return twelve_pm - now
-
+        print(now)
+        print(twelve_pm)
+        print(twelve_pm - now)
+        return twelve_pm - now - datetime.timedelta(minutes=7)
 
 
 def get_todays_tracks(Data):
@@ -145,12 +147,12 @@ async def main():
 
 
 test = False
-test = True
+# test = True
 
 if __name__ == "__main__":
     if test:
         print(get_twelve_pm())
+        raise "Remember to switch testing off"
     else:
-
         with get_telegram_client() as client:
             client.loop.run_until_complete(main())

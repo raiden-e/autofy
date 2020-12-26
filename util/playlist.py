@@ -39,7 +39,7 @@ def getAsync(
     for i in get_TaskCount(result['total'], True):
         offsets.append(i * 100)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=None) as executor:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
         exec_results = [
             executor.submit(
                 _spotify.playlist_tracks,
@@ -92,7 +92,6 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
             tracks_to_add[(j*100):((j+1)*100)]
         ) for j in get_TaskCount(len(tracks_to_add))
         ]
-    import os
 
 
 def get_TaskCount(x, start_at_1=False):
