@@ -51,7 +51,7 @@ def backup_playlist(pl: dict):
         return
 
     for track in GetTracks:
-        if track in SetTracks:
+        if track not in SetTracks:
             ToAdd.append(track)
 
     if ToAdd:
