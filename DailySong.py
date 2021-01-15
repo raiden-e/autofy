@@ -135,7 +135,7 @@ async def main():
             f"({Track['artists'][0]['external_urls']['spotify']})"
         }
     )
-    await send_webhook(messages[0]['message'])
+    await send_webhook(messages[0]['message'], 'Daily Song')
     async with client:
         for message in messages:
             print(f"sending song to {message['recipiant']}")

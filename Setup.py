@@ -6,14 +6,16 @@ extra_reqs = {
 }
 setup(
     name='autofy',
-    version='1.0.1',
+    version='1.0.2',
     description='A script to backup Spotify playlists; send\'s a daily track and set a lofi playlist weekly',
     author="@raiden-e",
     author_email="raiden.erdmann@gmail.com",
     install_requires=[
         'spotipy',
-        'telethon'
-        'discord.py'
+        'telethon',
+        'discord.py',
+        'pyGithub',
+        'pytz',
     ],
     tests_require=test_reqs,
     extras_require=extra_reqs,

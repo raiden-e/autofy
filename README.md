@@ -2,8 +2,7 @@
 
 Scripts that automatically backup Spotifyplaylist, update them and more.
 
-
-![Tests](https://github.com/Omglolyes/autofy/workflows/Tests/badge.svg) ![Daily Run](https://github.com/Omglolyes/autofy/workflows/Daily%20Run/badge.svg)
+![Tests](https://github.com/raiden-e/autofy/workflows/Tests/badge.svg) ![Daily Run](https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg)
 
 ## Licensing 🔑
 
