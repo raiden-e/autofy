@@ -66,7 +66,7 @@ def set_newPlaylist(inputPlaylist):
         raise "Could not get Tracks from the playlist, aborting"
 
     newPlaylist = _spotify.user_playlist_create(
-        config.SpotipyUN,
+        config.SPOTIPYUN,
         playlist_Name,
         public=True,
         description=f"Backup since {strftime('%d')} {strftime('%b')} {strftime('%Y')}"
@@ -83,7 +83,7 @@ def set_newPlaylist(inputPlaylist):
     playlists["playlist"][playlist_Name] = {
         "get": inputPlaylist["uri"], "set": newPlaylist["uri"]}
 
-    gist.load(playlist_Name, playlists)
+    gist.load(playlist_Name)
 
     print(newPlaylist["id"])
     return newPlaylist["id"]

@@ -46,8 +46,8 @@ def backup_playlist(pl: dict):
     try:
         for track in Set:
             SetTracks.append(track["track"]["id"])
-    except Exception:
-        print("Something wrong with Set")
+    except Exception as e:
+        print(f"Something wrong with Set\n{e}")
         return
 
     for track in GetTracks:
