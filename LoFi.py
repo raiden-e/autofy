@@ -19,8 +19,9 @@ def deduplify_list(potential_duplicates: list, reference_deuplicates: list):
 
 def randomize_lofi(initial_track: dict, lofi_base: list, lofi_list: list):
     try:
-        list_sample = random.sample(lofi_list, (149-len(lofi_base)))
-        final_sample = random.sample([*lofi_base, *list_sample], 149)
+        list_size = 250 - 1 # We count -1 bc of initial track
+        list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
+        final_sample = random.sample([*lofi_base, *list_sample], list_size)
         return [z["track"]["id"] for z in [initial_track, *final_sample]]
     except Exception:
         raise "Could not sample lofibase or lofilist"
@@ -28,7 +29,7 @@ def randomize_lofi(initial_track: dict, lofi_base: list, lofi_list: list):
 
 def main():
     if playlist.edited_this_week(_spotify, lofi_id):
-        print("Exiting")
+        print("Exiting, Ran this week")
         return
 
     print("getting playlist Backup")
