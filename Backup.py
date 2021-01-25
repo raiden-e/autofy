@@ -37,7 +37,8 @@ def backup_playlist(pl: dict):
         except TypeError as e:
             try:
                 print(f"Electronic rising doing its thing?\n{e}")
-                sendfail(f"Electronic rising doing its thing?\n{e}")
+                print(f'Didn\'t send fail message')
+                # sendfail(f"Electronic rising doing its thing?\n{e}")
             except Exception as e0:
                 print(f'Couldnt send fail message\n{e0}')
         except Exception as e:
@@ -59,16 +60,19 @@ def backup_playlist(pl: dict):
             playlist.addAsync(_spotify, ToAdd, pl['set'])
             print("Added:")
             pprint(ToAdd)
-        except Exception:
-            sendfail(f"{pl} {pl['set']}")
+        except Exception as e:
+            print(e)
+            # sendfail(f"{pl} {pl['set']}")
     else:
         print(f"{pl['set']}  is already up to date")
+    
+    # playlist.remove_duplicates()
 
 
 def main():
     playlists = gist.load("backup.json")
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
         for playlist in playlists["playlist"]:
             executor.submit(backup_playlist(playlists["playlist"][playlist]))
     print("Done")
