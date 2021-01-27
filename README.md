@@ -23,7 +23,7 @@ Scripts that automatically backup Spotifyplaylist, update them and more.
 
 ## Lofi ☕
 
-A script to pick around 150 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).
+A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).
 Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me study, code, play games and relax.
 
 ## Backup 📚
@@ -49,7 +49,7 @@ at 12 PM CEST
 
 ## Dubstep 🚑
 
-So I like this genre but Spotifys algorithms are kinds poor when it comes to recommandations and also the personal radar changes wheneven you listen to something new. _espacially_ when you listen to a single song from a popular artist. So I summed up some decent artists in a gist and this script pulls the latest releases from them and loads them into a [playlist](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2) on a weekly basis. Also if the latest release was an album, it pick the 2-5 most popular tracks from it.
+So I like this genre, but Spotify's algorithms are kind of poor, when it comes to recommandations. Also the personal radar changes wheneven you listen to something new. _Espacially_ when you listen to a songs by popular artists. So I summed up some decent dubstep artists in a [gist](https://gist.github.com). This script pulls the latest releases from those artists and loads them into a [playlist](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2) on a weekly basis. Also if the latest release was an album, it picks the 2-5 most popular tracks from it.
 
 ## Now Playing ▶
 
@@ -57,15 +57,33 @@ Show the currently playing song on Spotify and get the artist, song name, album 
 
 ## Examples
 
+### Example Lofi
+
 ```powershell
 python LoFi.py
+```
 
+### Example Image
+
+```powershell
 python Image.py spotify:playlist:5h9LqGUUE4FKQfVwgAu1OA
+```
 
+### Example DailySong
+
+```powershell
 python DailySong.py
+```
 
+### Example Dubstep
+
+```powershell
 python Dubstep.py
+```
 
+### Example Backup
+
+```powershell
 python Backup.py
 ```
 
