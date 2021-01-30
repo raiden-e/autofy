@@ -28,6 +28,8 @@ parser.add_argument(
     action="store_true")
 args = parser.parse_args()
 
+gist_name = "backup.json"
+
 _spotify = get_spotify_client()
 
 
@@ -50,9 +52,16 @@ def watermark_photo(input_image, output_image):
 
 def set_newPlaylist(inputPlaylist):
     try:
-        playlists = gist.load("backup.json")
+        playlists = gist.load(gist_name)
     except Exception:
         raise "Could not receive playlist's. Are you offline?"
+
+    for pl in playlists['playlist']:
+        if inputPlaylist['uri'] in playlists['playlist'][pl]['get'] \
+            or inputPlaylist['uri'] == playlists['playlist'][pl]['get']:
+            print('Playlist already backed')
+            return False
+    playlists = dict(sorted(playlists.items(), key=lambda item: item[0]))
 
     if inputPlaylist["name"] == "Discover Weekly":
         playlist_Name = f"{inputPlaylist['name']}.backup [{inputPlaylist['id']}]"
@@ -83,10 +92,11 @@ def set_newPlaylist(inputPlaylist):
     playlists["playlist"][playlist_Name] = {
         "get": inputPlaylist["uri"], "set": newPlaylist["uri"]}
 
-    gist.load(playlist_Name)
+    gist.update(gist_name, playlists, f"Add playlist: {playlist_Name} - ({inputPlaylist['uri']})")
 
     print(newPlaylist["id"])
     return newPlaylist["id"]
+
 
 
 def main():
@@ -95,6 +105,7 @@ def main():
                               [0]["url"], allow_redirects=True)).content)
     watermark_photo('BackupImage.jpg', output_image='BackupImage.jpg')
     if not args.noplaylist:
+        print("getting backed playlists...")
         print("setting new playlist")
         set_newPlaylist(_spotify.playlist(args.plid))
 

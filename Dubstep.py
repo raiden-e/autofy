@@ -58,8 +58,7 @@ def main():
 
     gist_list = gist.load(gist_name)
 
-    ids = [x['id']
-           for artist in gist_list for x in get_newest_by_artist(artist)]
+    ids = [x['id'] for art in gist_list for x in get_newest_by_artist(art)]
 
     # randomize and no doubles
     ids = list(set(ids))
