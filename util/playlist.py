@@ -172,3 +172,37 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
         print("continuing")
         return False
     return True
+
+
+def deduplify_list(potential_duplicates: list, reference_deuplicates: list):
+    def print_diff(a, b):
+        print("Duplicate Meta:\n {:>21}|{:<0}".format(
+            a['track']['name'], b['track']['name']))
+        print("{:>32}|{:<0}".format(
+            a['track']['id'], b['track']['id']))
+        print("{:>32}|{:<0}".format(
+            a['track']['artists'][0]['name'], b['track']['artists'][0]['name']))
+
+    for x in reference_deuplicates:
+        for y in potential_duplicates:
+            if x["track"]["id"] == y["track"]["id"]:
+                print("Duplicate ID: {0:30}- {1}".format(
+                    y['track']['name'], f"{x['track']['id']}|{y['track']['id']}"))
+                potential_duplicates.remove(y)
+                continue
+            # if duration somewhat same, artist and track name same
+            if y["track"]["duration_ms"] - 100 <= x["track"]["duration_ms"] <= y["track"]["duration_ms"] + 100:
+                if x["track"]["name"] == y["track"]["name"]:
+                    if len(x["track"]["artists"]) == 1:
+                        if x["track"]["artists"][0] in y["track"]["artists"]:
+                            print_diff(x, y)
+                            potential_duplicates.remove(y)
+                            continue
+                    else:
+                        for artist in x["track"]["artists"]:
+                            if artist['name'] in y["track"]["artists"]:
+                                print_diff(x, y)
+                                potential_duplicates.remove(y)
+                                continue
+
+    return potential_duplicates
