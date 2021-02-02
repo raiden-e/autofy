@@ -56,12 +56,13 @@ def getAsync(
     if publicOnly:
         for x in executor_results:
             for y in x:
-                if not y["is_local"]:
+                if not y["is_local"] and y['track'] is not None:
                     result["items"].append(y)
     else:
         for x in executor_results:
             for y in x:
-                result["items"].append(y)
+                if y['track'] is not None:
+                    result["items"].append(y)
 
     return result
 
@@ -171,82 +172,3 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
         print("continuing")
         return False
     return True
-
-
-def deduplify_list(potential_duplicates: list, reference_deuplicates: list):
-    def print_diff(a, b):
-        print("Duplicate Meta:\n {:>21}|{:<0}".format(
-            a['track']['name'], b['track']['name']))
-        print("{:>32}|{:<0}".format(
-            a['track']['id'], b['track']['id']))
-        print("{:>32}|{:<0}".format(
-            a['track']['artists'][0]['name'], b['track']['artists'][0]['name']))
-
-    for x in reference_deuplicates:
-        for y in potential_duplicates:
-            if x["track"]["id"] == y["track"]["id"]:
-                print("Duplicate ID: {0:30}- {1}".format(
-                    y['track']['name'], f"{x['track']['id']}|{y['track']['id']}"))
-                potential_duplicates.remove(y)
-                continue
-            # if duration somewhat same, artist and track name same
-            if y["track"]["duration_ms"] - 100 <= x["track"]["duration_ms"] <= y["track"]["duration_ms"] + 100:
-                if x["track"]["name"] == y["track"]["name"]:
-                    if len(x["track"]["artists"]) == 1:
-                        if x["track"]["artists"][0] in y["track"]["artists"]:
-                            print_diff(x, y)
-                            potential_duplicates.remove(y)
-                            continue
-                    else:
-                        for artist in x["track"]["artists"]:
-                            if artist['name'] in y["track"]["artists"]:
-                                print_diff(x, y)
-                                potential_duplicates.remove(y)
-                                continue
-
-    return potential_duplicates
-
-
-def remove_duplicates(playlist: list, id: str, url: str):
-    if not playlist or id and url:
-        raise TypeError("either provide url or id and playlist")
-    elif playlist and id and url:
-        raise TypeError("Please only provide one type of operation")
-
-    if url:
-        try:
-            playlist = getAsync(url)
-            id = playlist['id']
-        except Exception as e:
-            print(e)
-
-    def print_diff(a, b):
-        print("Duplicate Meta:\n {:>21}|{:<0}".format(
-            a['track']['name'], b['track']['name']))
-        print("{:>32}|{:<0}".format(
-            a['track']['id'], b['track']['id']))
-        print("{:>32}|{:<0}".format(
-            a['track']['artists'][0]['name'], b['track']['artists'][0]['name']))
-    
-    def count_duplicate_ids(playlist: list):
-        duplicates = dict()
-        for track in playlist:
-            if track['id'] in duplicates.keys():
-                duplicates['id'] = duplicates['id'] + 1
-            else:
-                duplicates['id'] = 1
-        for id in duplicates:
-            if id == 1:
-                duplicates.pop(id, None)
-        return duplicates
-
-    def count_duplicate_meta(playlist: list, ids: list):
-        artists = dict()
-        for track in playlist:
-            if track['id'] not in ids.keys():
-                artists.update()
-
-    duplicate_ids = count_duplicate_ids(playlist)
-    duplicate_meta = count_duplicate_meta(playlist, duplicate_ids.keys())
-    
-    return -1
