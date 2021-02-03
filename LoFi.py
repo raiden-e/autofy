@@ -8,15 +8,15 @@ username = "raiden_e"
 lofi = {
     "name": "lofi",
     "id": "5h9LqGUUE4FKQfVwgAu1OA",
-    "backup":"31k9ZXIfUi9v5mpbfg6FQH",
-    "base":"5adSO5spsp0tb48t2MyoD6",
+    "backup": "31k9ZXIfUi9v5mpbfg6FQH",
+    "base": "5adSO5spsp0tb48t2MyoD6",
 }
 japan = {
     "name": "japan",
     "id": "6Cu6fL6djm63Em0i93IRUW",
-    "backup":"19yEs2hB6J5FwHrGMsIlZQ",
-    "base":"7EdczIpYSY7aUBSMqgGguV",
-    }
+    "backup": "19yEs2hB6J5FwHrGMsIlZQ",
+    "base": "7EdczIpYSY7aUBSMqgGguV",
+}
 _spotify = get_spotify_client()
 
 
@@ -39,8 +39,7 @@ def main(id: str, backup: str, base: str):
     lofi_list = playlist.getAsync(
         _spotify, backup, True)["items"]
     print("getting playlist base")
-    lofi_base = playlist.get(
-        _spotify, base, True)['items']
+    lofi_base = playlist.get(_spotify, base, True)['items']
 
     print("deduplifying list")
     lofi_list = playlist.deduplify_list(lofi_list, lofi_base)
