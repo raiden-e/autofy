@@ -19,7 +19,7 @@ def get_newest_by_artist(artist):
     try:
         # This is bad but i cant get the popularity items otherwise
         artist_albums = _spotify.artist_albums(
-            artist_id=artist, album_type='single,album')['items']
+            artist_id=artist, album_type='single,album,compilation')['items']
     except Exception as e:
         raise f"Could not get latest album for {artist}, {e}"
 

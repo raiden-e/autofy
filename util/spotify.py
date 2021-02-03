@@ -19,7 +19,7 @@ def get_spotify_client():
             else:
                 raise "Please make sure that you get a spotipy cache string and place it into config.py"
 
-        print(f"{cache_path} EXISTS: {os.path.exists(cache_path)}")
+        # print(f"{cache_path} EXISTS: {os.path.exists(cache_path)}")
         _spotify = spotipy.Spotify(
             auth_manager=spotipy.oauth2.SpotifyOAuth(
                 username=config.SPOTIPYUN,

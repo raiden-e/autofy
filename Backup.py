@@ -2,38 +2,23 @@ import concurrent
 from pprint import pprint
 
 from util import gist, playlist
-from util.sendfail import sendfail
 from util.spotify import get_spotify_client
 
-_spotify = get_spotify_client()
-
-exceptions = []
-
-# Will remove if works reliably
-# if type(pl["get"]) is list:
-#     print("GET containes is a backup of multiple playlists:")
-#     pprint(pl, width=120)
-#     Get = []
-#     for x in pl["get"]:
-#         print(f"loading: {str(x)}")
-#         Get.extend(playlist.getAsync(_spotify, x, True)["items"])
-# else:
-#     print(f"loading {pl}")
-#     Get = playlist.getAsync(_spotify, pl["get"], True)["items"]
 
 def filter(playlist):
     tracks = []
     for track in playlist:
         try:
-            if track['track'] is not None:
+            if track['track']['id']:
                 tracks.append(track["track"])
         except TypeError as e:
             print(f"Electronic rising doing its thing?\n{e}")
-            exceptions.append(track)
+            exceptions.append([e, track])
         except Exception as e:
             print(f"An error has occured in {track}\n{e}")
-            exceptions.append(track)
+            exceptions.append([e, track])
     return tracks
+
 
 def backup_playlist(pl: dict):
     pprint(pl, width=120)
@@ -48,55 +33,64 @@ def backup_playlist(pl: dict):
     Get = filter(Get)
     Set = filter(Set)
 
-    seen_tracks = [
-        {
-            "name": x['name'],
-            "artist": x['artists'][0]['name'],
-            "duration": x['duration_ms'],
-            "id": x['id']
-        }for x in Set
-    ]
+    def track_to_seen(tts):
+        return {
+            "name": tts['name'],
+            "artist": tts['artists'][0]['name'],
+            "duration": tts['duration_ms'],
+            "id": tts['id']
+        }
+
+    seen_tracks = [track_to_seen(tr) for tr in Set]
 
     def filter2(track):
         for x in seen_tracks:
             if x['id'] == track['id']:
-                seen_tracks.append(track)
-                return True
+                seen_tracks.append(track_to_seen(track))
+                return False
+            if x['id'] in disabled:
+                return False
             if x['name'] == track['name']:
                 if x['artist'] == track['artists'][0]['name']:
-                    if x['duration'] -100 <= track['duration_ms'] <= x['duration'] + 100:
-                        seen_tracks.append(track)
+                    if x['duration'] - 100 <= track['duration_ms'] <= x['duration'] + 100:
+                        seen_tracks.append(track_to_seen(track))
                         caught.append(x)
-                        return True
-        seen_tracks.append(track)
-        return False
+                        return False
+        seen_tracks.append(track_to_seen(track))
+        return True
 
     ToAdd = []
     for track in Get:
         if filter2(track):
-            ToAdd.append(track)
+            ToAdd.append(track['id'])
 
     if ToAdd:
         try:
             playlist.addAsync(_spotify, ToAdd, pl['set'])
-            pprint(f"Added: {ToAdd['name']} by {ToAdd['artists'][0]['name']}")
-            # pprint(ToAdd)
+            pprint(f"Added: {len(ToAdd)}{ToAdd}")
         except Exception as e:
             print(e)
     else:
-        print(f"{pl['set']} is already up to date")
+        print(f"{pl['set']} is already up to date", end=None)
 
     print(f"Caught: {len(caught)}")
 
 
 def main():
+    print("Loading backup.json")
     playlists = gist.load("backup.json")
-    # TODO disabled = gist.load("disabled.json")
     with concurrent.futures.ProcessPoolExecutor() as executor:
         for playlist in playlists["playlist"]:
             executor.submit(backup_playlist(playlists["playlist"][playlist]))
+
+    print("Exceptions:")
+    pprint(exceptions)
     print("Done")
 
 
 if __name__ == '__main__':
+    _spotify = get_spotify_client()
+    exceptions = []
+    print("Loading disabled.json")
+    disabled = gist.load("disabled.json")
     main()
