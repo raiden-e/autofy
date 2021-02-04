@@ -1,5 +1,6 @@
 import argparse
 import base64
+import collections
 import os
 import sys
 from time import strftime
@@ -58,10 +59,9 @@ def set_newPlaylist(inputPlaylist):
 
     for pl in playlists['playlist']:
         if inputPlaylist['uri'] in playlists['playlist'][pl]['get'] \
-            or inputPlaylist['uri'] == playlists['playlist'][pl]['get']:
+                or inputPlaylist['uri'] == playlists['playlist'][pl]['get']:
             print('Playlist already backed')
             return False
-    playlists = dict(sorted(playlists.items(), key=lambda item: item[0]))
 
     if inputPlaylist["name"] == "Discover Weekly":
         playlist_Name = f"{inputPlaylist['name']}.backup [{inputPlaylist['id']}]"
@@ -92,11 +92,14 @@ def set_newPlaylist(inputPlaylist):
     playlists["playlist"][playlist_Name] = {
         "get": inputPlaylist["uri"], "set": newPlaylist["uri"]}
 
-    gist.update(gist_name, playlists, f"Add playlist: {playlist_Name} - ({inputPlaylist['uri']})")
+    playlists["playlist"] = collections.OrderedDict(
+        sorted(playlists['playlist'].items()))
+
+    comment = f"Add playlist: {playlist_Name} - ({inputPlaylist['uri']})"
+    gist.update(gist_name, playlists, comment)
 
     print(newPlaylist["id"])
     return newPlaylist["id"]
-
 
 
 def main():
