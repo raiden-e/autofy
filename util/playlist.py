@@ -152,10 +152,12 @@ def remove_tracks(_spotify: spotipy.Spotify, playlistId: str, trackIDs: list):
 def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
     import datetime
     try:
-        lastEditStr = _spotify.playlist_tracks(
-            playlist_id,
-            limit=1
-        )["items"][0]["added_at"]
+        lastEditStr = _spotify.playlist_tracks(playlist_id, limit=10)["items"]
+        newest_track = lastEditStr[0]
+        for item in lastEditStr[1:]:
+            if item['added_at'] > newest_track['added_at']:
+                newest_track = item
+        lastEditStr = newest_track['added_at']
         l = datetime.datetime.strptime(lastEditStr, '%Y-%m-%dT%H:%M:%SZ')
     except Exception:
         print("LoFi playlist was empty...")

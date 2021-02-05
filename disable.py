@@ -24,6 +24,6 @@ if track in disabled_tracks:
 disabled_tracks.append(track)
 
 
-# gist.update(gist_name, disabled_tracks, f"Added track: {track}")
+gist.update(gist_name, disabled_tracks, f"Added track: {track}")
 
 print(f"Added track: {track}")
