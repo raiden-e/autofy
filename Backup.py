@@ -1,4 +1,3 @@
-import concurrent
 from pprint import pprint
 
 from util import gist, playlist
@@ -33,29 +32,33 @@ def backup_playlist(pl: dict):
     Get = filter(Get)
     Set = filter(Set)
 
-    def track_to_seen(tts):
+    def track_to_seen(track):
         return {
-            "name": tts['name'],
-            "artist": tts['artists'][0]['name'],
-            "duration": tts['duration_ms'],
-            "id": tts['id']
+            "name": track['name'],
+            "artist": track['artists'][0]['name'],
+            "duration": track['duration_ms'],
+            "id": track['id']
         }
 
     seen_tracks = [track_to_seen(tr) for tr in Set]
 
     def filter2(track):
+        if track['id'] in disabled:
+            return False
         for x in seen_tracks:
             if x['id'] == track['id']:
                 seen_tracks.append(track_to_seen(track))
                 return False
-            if x['id'] in disabled:
+
+            conditions = (
+                x['name'] == track['name'],
+                x['artist'] == track['artists'][0]['name'],
+                abs(x['duration'] - track['duration_ms']) <= 100
+            )
+            if all(conditions):
+                seen_tracks.append(track_to_seen(track))
+                caught.append(x)
                 return False
-            if x['name'] == track['name']:
-                if x['artist'] == track['artists'][0]['name']:
-                    if x['duration'] - 100 <= track['duration_ms'] <= x['duration'] + 100:
-                        seen_tracks.append(track_to_seen(track))
-                        caught.append(x)
-                        return False
         seen_tracks.append(track_to_seen(track))
         return True
 
@@ -79,9 +82,9 @@ def backup_playlist(pl: dict):
 def main():
     print("Loading backup.json")
     playlists = gist.load("backup.json")
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        for playlist in playlists["playlist"]:
-            executor.submit(backup_playlist(playlists["playlist"][playlist]))
+
+    for playlist in playlists["playlist"]:
+        backup_playlist(playlists["playlist"][playlist])
 
     print("Exceptions:")
     pprint(exceptions)

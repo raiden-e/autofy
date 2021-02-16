@@ -90,16 +90,15 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
         [executor.submit(
             _spotify.playlist_add_items,
             playlistId,
-            tracks_to_add[(j*100):((j+1)*100)]
-        ) for j in get_TaskCount(len(tracks_to_add))
-        ]
+            tracks_to_add[(j*100):((j+1)*100)])
+            for j in get_TaskCount(len(tracks_to_add))]
 
 
 def get_TaskCount(x, start_at_1=False):
     # Spotify's API wont allow more than 100 songs per POST:
     # https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/#body-parameters:~:text=A%20maximum%20of%20100
 
-    return range(1, int(math.ceil(x / 100.0))) if start_at_1 else range(0, int(math.ceil(x / 100.0)))
+    return range(1 if start_at_1 else 0, int(math.ceil(x / 100.0)))
 
 
 def dedpuplicate_existingPlaylist(_spotify: spotipy.Spotify, playlistId: str):
@@ -176,35 +175,53 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
     return True
 
 
-def deduplify_list(potential_duplicates: list, reference_deuplicates: list):
+def deduplify_list(main_list: list, base_list: list, disabled: list):
     def print_diff(a, b):
-        print("Duplicate Meta:\n {:>21}|{:<0}".format(
-            a['track']['name'], b['track']['name']))
+        print("Duplicate Meta:\n{:>32}|{:<0}".format(
+            a['track']['name'], b['name']))
         print("{:>32}|{:<0}".format(
-            a['track']['id'], b['track']['id']))
+            a['track']['id'], b['id']))
         print("{:>32}|{:<0}".format(
-            a['track']['artists'][0]['name'], b['track']['artists'][0]['name']))
+            a['track']['artists'][0]['name'], b['artists'][0]))
 
-    for x in reference_deuplicates:
-        for y in potential_duplicates:
-            if x["track"]["id"] == y["track"]["id"]:
-                print("Duplicate ID: {0:30}- {1}".format(
-                    y['track']['name'], f"{x['track']['id']}|{y['track']['id']}"))
-                potential_duplicates.remove(y)
-                continue
-            # if duration somewhat same, artist and track name same
-            if y["track"]["duration_ms"] - 100 <= x["track"]["duration_ms"] <= y["track"]["duration_ms"] + 100:
-                if x["track"]["name"] == y["track"]["name"]:
-                    if len(x["track"]["artists"]) == 1:
-                        if x["track"]["artists"][0] in y["track"]["artists"]:
+    def track_to_seen(track):
+        return {
+            "name": track['name'],
+            "artists": [artist['name'] for artist in track['artists']],
+            "duration": track['duration_ms'],
+            "id": track['id']
+        }
+
+    seen_tracks = [track_to_seen(track['track']) for track in base_list]
+
+    for x in main_list:
+        x_tr = x['track']
+        if x_tr['id'] in disabled:
+            main_list.remove(x)
+            continue
+
+        def inner():
+            for y in seen_tracks:
+                if x_tr["id"] == y["id"]:
+                    print("Duplicate ID: {0:30}- {1}".format(
+                        y['name'], f"{x_tr['id']}|{y['id']}"))
+                    seen_tracks.append(track_to_seen(x_tr))
+                    main_list.remove(x)
+                    return
+
+                conditions = (
+                    # if duration somewhat same, artist and track name same
+                    abs(y["duration"] - x_tr["duration_ms"]) <= 100,
+                    x_tr["name"] == y["name"],
+                )
+                if all(conditions):
+                    for artist in x_tr["artists"]:
+                        if artist['name'] in y["artists"]:
+                            seen_tracks.append(track_to_seen(x_tr))
                             print_diff(x, y)
-                            potential_duplicates.remove(y)
-                            continue
-                    else:
-                        for artist in x["track"]["artists"]:
-                            if artist['name'] in y["track"]["artists"]:
-                                print_diff(x, y)
-                                potential_duplicates.remove(y)
-                                continue
+                            main_list.remove(x)
+                            return
+            seen_tracks.append(track_to_seen(x_tr))
+        inner()
 
-    return potential_duplicates
+    return main_list
