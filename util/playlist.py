@@ -181,8 +181,12 @@ def deduplify_list(main_list: list, base_list: list, disabled: list):
             a['track']['name'], b['name']))
         print("{:>32}|{:<0}".format(
             a['track']['id'], b['id']))
-        print("{:>32}|{:<0}".format(
-            a['track']['artists'][0]['name'], b['artists'][0]))
+        art_a, art_b = a['track']['artists'][0]['name'], b['artists'][0]
+        for artist in a['track']['artists'][1:]:
+            art_a += f", {artist['name']}"
+        for artist in b["artists"][1:]:
+            art_b += f", {artist}"
+        print("{:>32}|{:<0}".format(art_a, art_b))
 
     def track_to_seen(track):
         return {
@@ -195,33 +199,34 @@ def deduplify_list(main_list: list, base_list: list, disabled: list):
     seen_tracks = [track_to_seen(track['track']) for track in base_list]
 
     for x in main_list:
-        x_tr = x['track']
-        if x_tr['id'] in disabled:
+        xt = x['track']  # means x_track
+        if xt['uri'] in disabled:
+            print(f"Disabled: {xt['id']}")
             main_list.remove(x)
             continue
 
         def inner():
             for y in seen_tracks:
-                if x_tr["id"] == y["id"]:
-                    print("Duplicate ID: {0:30}- {1}".format(
-                        y['name'], f"{x_tr['id']}|{y['id']}"))
-                    seen_tracks.append(track_to_seen(x_tr))
+                if xt["id"] == y["id"]:
+                    print("Duplicate ID: {0:30}{1}".format(
+                        y['name'], f"{xt['id']}|{y['id']}"))
+                    seen_tracks.append(track_to_seen(xt))
                     main_list.remove(x)
                     return
 
                 conditions = (
                     # if duration somewhat same, artist and track name same
-                    abs(y["duration"] - x_tr["duration_ms"]) <= 100,
-                    x_tr["name"] == y["name"],
+                    abs(y["duration"] - xt["duration_ms"]) <= 100,
+                    xt["name"] == y["name"],
                 )
                 if all(conditions):
-                    for artist in x_tr["artists"]:
+                    for artist in xt["artists"]:
                         if artist['name'] in y["artists"]:
-                            seen_tracks.append(track_to_seen(x_tr))
+                            seen_tracks.append(track_to_seen(xt))
                             print_diff(x, y)
                             main_list.remove(x)
                             return
-            seen_tracks.append(track_to_seen(x_tr))
+            seen_tracks.append(track_to_seen(xt))
         inner()
 
     return main_list
