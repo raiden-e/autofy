@@ -1,5 +1,6 @@
-<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests" width="200" align="right"/>
-<img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" width="200" align="right"/>
+<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests" height="25" align="right"/>
+
+<img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" height="25" align="right"/>
 
 # Autofy
 
