@@ -1,8 +1,10 @@
+<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests" width="200" align="right"/>
+<img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" width="200" align="right"/>
+
 # Autofy
 
 Scripts that automatically backup Spotifyplaylist, update them and more.
 
-![Tests](https://github.com/raiden-e/autofy/workflows/Tests/badge.svg) ![Daily Run](https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg)
 
 ## Licensing 🔑
 
