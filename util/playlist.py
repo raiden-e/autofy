@@ -4,12 +4,7 @@ import math
 import spotipy
 
 
-def get(
-    _spotify: spotipy.Spotify,
-    playlistId: str,
-    publicOnly=False
-) -> dict:
-
+def get(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> dict:
     result = _spotify.playlist_items(playlist_id=playlistId)
 
     while result['next']:
@@ -18,26 +13,19 @@ def get(
         result['next'] = tmp['next']
 
     if publicOnly:
-        result['items'][:] = [
-            item for item in result['items'] if not item.get('is_local')]
+        for item in result['items']:
+            if item['is_local']:
+                result['items'].remove(item)
 
     return result
 
 
-def getAsync(
-    _spotify: spotipy.Spotify,
-    playlistId: str,
-    publicOnly=False
-) -> dict:
-
+def getAsync(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> dict:
     result = _spotify.playlist_tracks(playlistId)
     if result['total'] <= 100:
         return result
 
-    executor_results, offsets = [], []
-
-    for i in get_TaskCount(result['total'], True):
-        offsets.append(i * 100)
+    offsets = [i * 100 for i in get_TaskCount(result['total'], True)]
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         exec_results = [
@@ -50,18 +38,18 @@ def getAsync(
             ) for offset in offsets
         ]
 
-        for futures in concurrent.futures.as_completed(exec_results):
-            executor_results.append(futures.result()["items"])
+        executor_results = [f.result()["items"]
+                            for f in concurrent.futures.as_completed(exec_results)]
 
     if publicOnly:
         for x in executor_results:
             for y in x:
-                if not y["is_local"] and y['track'] is not None:
+                if not y["track"] is None and not y["is_local"]:
                     result["items"].append(y)
     else:
         for x in executor_results:
             for y in x:
-                if y['track'] is not None:
+                if y["track"] is not None:
                     result["items"].append(y)
 
     return result
@@ -101,34 +89,6 @@ def get_TaskCount(x, start_at_1=False):
     return range(1 if start_at_1 else 0, int(math.ceil(x / 100.0)))
 
 
-def dedpuplicate_existingPlaylist(_spotify: spotipy.Spotify, playlistId: str):
-    playlist = getAsync(_spotify, playlistId)
-    # find_all_dups()
-    duplicateIDs, seenIDs, seenNameAndArtist = [], [], {}
-    for track in playlist:
-        duplicate = False
-        seenNameAndArtistKey = f'{track["name"]}:{track["artists"][0]["name"]}'.lower(
-        )
-        duration = track["duration"]
-
-        if track['id'] in seenIDs:
-            duplicate = True
-        else:
-            if seenNameAndArtistKey in seenNameAndArtist:
-                if seenNameAndArtist[seenNameAndArtistKey] - duration < 2000:
-                    duplicate = True
-
-        if duplicate:
-            duplicateIDs.append(track["id"])
-        seenIDs.append(track["id"])
-        seenNameAndArtist == {**seenNameAndArtist,
-                              seenNameAndArtistKey: duration}
-
-    # https://github.com/JMPerez/spotify-dedup/
-    remove_tracks(duplicateIDs)
-    return 0
-
-
 def clear(_spotify: spotipy.Spotify, playlistId: str):
     tracks = []
     for x in getAsync(_spotify, playlistId)['items']:
@@ -140,12 +100,6 @@ def clear(_spotify: spotipy.Spotify, playlistId: str):
             playlist_id=playlistId,
             items=tracks[(i*100):((i+1)*100)]
         )
-
-
-def remove_tracks(_spotify: spotipy.Spotify, playlistId: str, trackIDs: list):
-    # TODO
-    _spotify.playlist_remove_specific_occurrences_of_items(playlistId)
-    return 0
 
 
 def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
