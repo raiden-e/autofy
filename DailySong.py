@@ -31,19 +31,10 @@ def get_twelve_pm():
 
 def get_todays_tracks(Data):
     _spotify = get_spotify_client()
-    if type(Data['TrackDesTages'][strftime("%w")]['get']) is list:
-        tracks = []
-        for playlistId in Data['TrackDesTages'][strftime("%w")]['get']:
-            print("loading " + str(playlistId))
-            tracks.extend(
-                playlist.getAsync(_spotify, playlistId, True)['items']
-            )
-    else:
-        print(f"Weekday: {strftime('%w')}")
-        playlistId = Data['TrackDesTages'][strftime("%w")]['get']
-        print("loading " + playlistId)
-        tracks = playlist.getAsync(_spotify, playlistId, True)['items']
-
+    tracks = []
+    for pl in Data['TrackDesTages'][strftime("%w")]['get']:
+        print(f"loading {pl}")
+        tracks.extend(playlist.getAsync(_spotify, pl, True)['items'])
     return tracks
 
 
@@ -56,45 +47,51 @@ async def message_sent_today():
         print("Todays Track scheduled and will be sent at 12pm")
         return True
 
-    lastMsg = None
+    lastMsg = None  # if chat is empty, prevent exeption
     async for lastMsg in client.iter_messages('TrackDesTages', limit=1):
         print(f"Message Date: {lastMsg.date.date()}")
     print(f"Current Date: {datetime.datetime.now().date()}")
 
-    # only send message the day after last sent message
     try:
-        if datetime.datetime.now().date() <= lastMsg.date.date() and not test:
+        if test:
+            print("Test Mode")
+            return True
+
+        # only send message the day after last sent message
+        if datetime.datetime.now().date() <= lastMsg.date.date():
             print("Todays Track has alredy been sent")
             return True
     except:
         print("Chat is empty, sending first daily track")
+
     return False
 
 
-def get_Track(tracks):
+def get_random(tracks):
     Track = None
-    while Track is None:
+    i = 0
+    while not Track and i < 100:
+        i = i+1
         tmpTrack = random.choice(tracks)["track"]
         try:
-            tmpTrack['artists'][0]['external_urls']['spotify']
-            tmpTrack['external_urls']['spotify']
+            print(tmpTrack['artists'][0]['external_urls']['spotify'])
+            print(tmpTrack['external_urls']['spotify'])
             Track = tmpTrack
-        except Exception:
-            pass
+        except Exception as e:
+            print(type(e))
+            print(e)
 
     return Track
 
 
 def load_data():
+    dailysong_texts = os.path.join(
+        os.path.dirname(__file__), "util", "dailysong.json")
     try:
-        dailysong_texts = os.path.join(
-            os.path.dirname(__file__), "util", "dailysong.json")
         with open(dailysong_texts, "r", encoding='utf-8-sig') as f:
-            Data = json.loads(f.read())
-
-        return Data
+            return json.loads(f.read())
     except(FileNotFoundError, FileExistsError) as e:
-        print(f"File not found! {e}")
+        print(f"File not found!\n{e}")
         return False
 
 
@@ -105,18 +102,16 @@ async def main():
         return 0
 
     Data = load_data()
-    if Data == False:
+    if not Data:
         raise("Couldnt load Data, does dailysong.json exist?")
+
     print("Loading playlist...")
     tic = time.perf_counter()
     tracks = get_todays_tracks(Data)
-    print(f"Loaded playlist(s) in "
-          f"{time.perf_counter() - tic:0.4f} seconds")
+    print(f"Loaded playlist(s) in {time.perf_counter() - tic:0.4f} seconds")
 
-    print("Getting random track")
-    Track = get_Track(tracks)
-
-    print(f"Sending DailySong {Track['name']}")
+    Track = get_random(tracks)
+    print(f"DailySong: {Track['name']}")
 
     messages = (
         {
@@ -135,24 +130,24 @@ async def main():
             f"({Track['artists'][0]['external_urls']['spotify']})"
         }
     )
-    await send_webhook(messages[0]['message'], 'Daily Song')
-    async with client:
-        for message in messages:
-            print(f"sending song to {message['recipiant']}")
-            await client.send_message(
-                'me' if test else message['recipiant'],
-                message['message'],
-                schedule=get_twelve_pm()
-            )
+    if test:
+        print("Test Mode: not sending")
+    else:
+        print("Sending")
+        await send_webhook(messages[0]['message'], 'Daily Song')
+        async with client:
+            for message in messages:
+                print(f"sending song to {message['recipiant']}")
+                await client.send_message(
+                    'me' if test else message['recipiant'],
+                    message['message'],
+                    schedule=get_twelve_pm()
+                )
 
 
 test = False
-# test = True
+test = True
 
 if __name__ == "__main__":
-    if test:
-        print(get_twelve_pm())
-        raise "Remember to switch testing off"
-    else:
-        with get_telegram_client() as client:
-            client.loop.run_until_complete(main())
+    with get_telegram_client() as client:
+        client.loop.run_until_complete(main())

@@ -10,7 +10,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 import config
 from util import gist, playlist
-from util.spotify import get_spotify_client
+from util.spotify import getsp_client
 
 if len(sys.argv) > 3:
     raise TypeError(
@@ -31,7 +31,7 @@ args = parser.parse_args()
 
 gist_name = "backup.json"
 
-_spotify = get_spotify_client()
+sp = getsp_client()
 
 
 def watermark_photo(input_image, output_image):
@@ -70,11 +70,11 @@ def set_newPlaylist(inputPlaylist):
 
     try:
         tracks = [x["track"]["uri"]
-                  for x in playlist.getAsync(_spotify, args.plid, True)['items']]
+                  for x in playlist.getAsync(sp, args.plid, True)['items']]
     except Exception:
         raise "Could not get Tracks from the playlist, aborting"
 
-    newPlaylist = _spotify.user_playlist_create(
+    newPlaylist = sp.user_playlist_create(
         config.SPOTIPYUN,
         playlist_Name,
         public=True,
@@ -82,15 +82,15 @@ def set_newPlaylist(inputPlaylist):
     )
 
     with open("BackupImage.jpg", "rb") as pic:
-        _spotify.playlist_upload_cover_image(
+        sp.playlist_upload_cover_image(
             newPlaylist["id"], base64.b64encode(pic.read()))
 
     for j in playlist.get_TaskCount(len(tracks)):
-        _spotify.user_playlist_add_tracks(
-            _spotify.auth_manager.username, playlist_id=newPlaylist["id"], tracks=tracks[(j*100):((j+1)*100)])
+        sp.user_playlist_add_tracks(
+            sp.auth_manager.username, playlist_id=newPlaylist["id"], tracks=tracks[(j*100):((j+1)*100)])
 
     playlists["playlist"][playlist_Name] = {
-        "get": inputPlaylist["uri"], "set": newPlaylist["uri"]}
+        "get": [inputPlaylist["uri"]], "set": newPlaylist["uri"]}
 
     playlists["playlist"] = collections.OrderedDict(
         sorted(playlists['playlist'].items()))
@@ -104,13 +104,13 @@ def set_newPlaylist(inputPlaylist):
 
 def main():
     with open('BackupImage.jpg', 'wb') as p:
-        p.write((requests.get(_spotify.playlist_cover_image(args.plid)
-                              [0]["url"], allow_redirects=True)).content)
+        with requests.get(sp.playlist_cover_image(args.plid)[0]["url"], allow_redirects=True) as r:
+            p.write(r.content)
     watermark_photo('BackupImage.jpg', output_image='BackupImage.jpg')
     if not args.noplaylist:
         print("getting backed playlists...")
         print("setting new playlist")
-        set_newPlaylist(_spotify.playlist(args.plid))
+        set_newPlaylist(sp.playlist(args.plid))
 
 
 if __name__ == '__main__':
