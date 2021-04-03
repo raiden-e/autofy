@@ -146,7 +146,7 @@ async def main():
 
 
 test = False
-test = True
+# test = True
 
 if __name__ == "__main__":
     with get_telegram_client() as client:
