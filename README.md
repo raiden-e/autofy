@@ -1,60 +1,62 @@
 # Autofy
 
-<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests"/>
-<img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" style="padding: 0px 5px 0px 5px;" />
+<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests"/><img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" style="padding-left: 5px" />
 
-Scripts that automatically backup, update Spotify playlists etc.
+_Scripts that automatically backup, update Spotify playlists etc._
 
 ## Licensing 🔑
 
-[telethon](https://github.com/LonamiWebs/Telethon/blob/master/LICENSE) |
-[spotipy](https://github.com/plamere/spotipy/blob/master/LICENSE.md) |
-[discord.py](https://github.com/Rapptz/discord.py/blob/master/LICENSE) |
-[pyGithub](https://github.com/PyGithub/PyGithub/blob/master/COPYING) |
-[pytz](https://github.com/stub42/pytz/blob/master/LICENSE.txt) |
-[Pillow](https://github.com/python-pillow/Pillow/blob/master/LICENSE)
+- [discord.py](https://github.com/Rapptz/discord.py/blob/master/LICENSE)
+- [Pillow](https://github.com/python-pillow/Pillow/blob/master/LICENSE)
+- [pyGithub](https://github.com/PyGithub/PyGithub/blob/master/COPYING)
+- [pytz](https://github.com/stub42/pytz/blob/master/LICENSE.txt)
+- [spotipy](https://github.com/plamere/spotipy/blob/master/LICENSE.md)
+- [telethon](https://github.com/LonamiWebs/Telethon/blob/master/LICENSE)
 
 ## Links 📎
 
-- [LoFi Playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA)
-- [Dubstep Radar](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2)
 - [Daily Song](http://t.me/Daily_Track)
-- [Track des Tages](http://t.me/TrackDesTages)
 - [Discord Daily Song](https://discord.gg/wDaVDtx)
+- [Dubstep Radar](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2)
+- [LoFi Playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA)
+- [Track des Tages](http://t.me/TrackDesTages)
+- [Trappin in Japan](https://open.spotify.com/playlist/6Cu6fL6djm63Em0i93IRUW)
 
 ## Lofi ☕
 
 A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).
-Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me study, code, play games and relax.
+Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me study, code, play games, and relax.
 
 ## Backup 📚
 
-Spotify has some good playlists. However they get updated sometimes and some songs get removed from them. This script goes through a number of playlists and archives their tracks. Check out the [Night Rider Playlist](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8) for example.
+Spotify has some good playlists. However, they get updated sometimes and good songs might be removed from them. This script goes through several of playlists and archives their tracks.
+
+Check out the [Night Rider Playlist](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8) and the [Night Rider Backup](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8).
 
 ### Requirements for Backup
 
-You need to go to [gist.github.com](https://gist.github.com/) and create a gist with a file called `backup.json`
+You need to go to [gist.github.com](https://gist.github.com) and create a gist with a file called `backup.json`
 
 ### Image
 
-Automatically adds a playlist to the gist which contians Backup.py 's list of uri's.
+Automatically adds a playlist to the gist containing Backup.py 's list of URI's.
 
 ## DailySong 🎶
 
 Send's a random song from a Spotify playlist to
 [Track des Tages](t.me/TrackDesTages),
-[Daily Track](t.me/Daily_Track)
+[Daily Track](t.me/Daily_Track),
 and to my
 [Discord](https://discord.gg/wDaVDtx)
-at 12 PM CEST
+at noon CEST
 
 ## Dubstep 🚑
 
-So I like this genre, but Spotify's algorithms are kind of poor, when it comes to recommandations. Also the personal radar changes wheneven you listen to something new. _Espacially_ when you listen to a songs by popular artists. So I summed up some decent dubstep artists in a [gist](https://gist.github.com). This script pulls the latest releases from those artists and loads them into a [playlist](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2) on a weekly basis. Also if the latest release was an album, it picks the 2-5 most popular tracks from it.
+So I like this genre, but Spotify's algorithms are kind of poor when it comes to recommendations. The personal radar changes whenever you listen to something new. _Especially_ when you recently listened to songs by popular artists. So I summed up some decent dubstep artists in a [gist](https://gist.github.com). This script pulls the latest releases from those artists and loads them into a [playlist](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2) every week. If the latest release was an album, it picks the 2-5 most popular tracks.
 
 ## Now Playing ▶
 
-Show the currently playing song on Spotify and get the artist, song name, album name and cover.
+Show the currently playing song on Spotify and get the artist, song name, album name, and cover.
 
 ## Examples
 
