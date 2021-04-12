@@ -29,9 +29,10 @@ Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me
 
 ## Backup 📚
 
-Spotify has some good playlists. However, they get updated sometimes and good songs might be removed from them. This script goes through several of playlists and archives their tracks.
+Spotify has some good playlists. However, they update them sometimes, such that they remove good songs from them.
+This script goes through several playlists and archives their tracks.
 
-Check out the [Night Rider Playlist](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8) and the [Night Rider Backup](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8).
+Check out the [Night Rider Playlist](https://open.spotify.com/playlist/37i9dQZF1DX6GJXiuZRisr) and the [Night Rider Backup](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8).
 
 ### Requirements for Backup
 
@@ -46,17 +47,22 @@ Automatically adds a playlist to the gist containing Backup.py 's list of URI's.
 Send's a random song from a Spotify playlist to
 [Track des Tages](t.me/TrackDesTages),
 [Daily Track](t.me/Daily_Track),
-and to my
+and my
 [Discord](https://discord.gg/wDaVDtx)
-at noon CEST
+at noon CEST.
 
 ## Dubstep 🚑
 
-So I like this genre, but Spotify's algorithms are kind of poor when it comes to recommendations. The personal radar changes whenever you listen to something new. _Especially_ when you recently listened to songs by popular artists. So I summed up some decent dubstep artists in a [gist](https://gist.github.com). This script pulls the latest releases from those artists and loads them into a [playlist](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2) every week. If the latest release was an album, it picks the 2-5 most popular tracks.
+So I like this genre, but Spotify's algorithms are kind of poor when it comes to recommendations.
+The personal radar changes whenever you listen to something new. _Especially_ when you recently listened to songs by popular artists.
+So I summed up some decent dubstep artists in a [gist](https://gist.github.com).
+This script pulls the latest releases from those artists and loads them into a [playlist](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2) every week.
+If the latest release was an album, it picks the 2-5 most popular tracks.
 
 ## Now Playing ▶
 
 Show the currently playing song on Spotify and get the artist, song name, album name, and cover.
+This script continuously  saves the name of the song, artist, and album in a text file in the user's home folder.
 
 ## Examples
 
@@ -113,14 +119,16 @@ Get your [gist token](https://github.com/settings/tokens/new)
 Rename `config_template.py` to `config.py`.
 Save your api hashes and id's to `config.py`
 
-Install [Python](https://www.python.org/downloads/)
+Install [Python](https://www.python.org/downloads)
 
 Open Powershell/CMD and run the following commands:
 
 ```powershell
+# if you are unfamiliar with virtual environments, you can read up on them here:
+# https://docs.python.org/3/tutorial/venv.html
 python -m venv venv
 
-.\venv\Scrupts\activate.ps1
+.\venv\Scripts\activate.ps1
 
 pip install -r requirements.txt
 ```
@@ -128,5 +136,6 @@ pip install -r requirements.txt
 Now you can run a script manually like so:
 
 ```powershell
-python Image.py spotify:playlist:xxxxxxxxxx # with `xx...x` being your playlist id
+# 'xxxxxxxxxx' is the playlist id
+python Image.py spotify:playlist:xxxxxxxxxx
 ```
