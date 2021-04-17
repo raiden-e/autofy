@@ -118,12 +118,12 @@ async def main():
             "recipiant": 'TrackDesTages',
             "message": f"{Data['TrackDesTages'][strftime('%w')]['DE']}\n\n"
             f"Hier ist [{Track['name']}]({Track['external_urls']['spotify']})"
-            f" von {Track['artists'][0]['name']}"
+            f" von `{Track['artists'][0]['name']}`"
         }, {
             "recipiant": 'Daily_Track',
             "message": f"{Data['TrackDesTages'][strftime('%w')]['EN']}\n\n"
             f"This is [{Track['name']}]({Track['external_urls']['spotify']})"
-            f" by {Track['artists'][0]['name']}"
+            f" by `{Track['artists'][0]['name']}`"
         }
     )
     if test:
