@@ -13,9 +13,7 @@ def get(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> dict:
         result['next'] = tmp['next']
 
     if publicOnly:
-        for item in result['items']:
-            if item['is_local']:
-                result['items'].remove(item)
+        result['items'] = [item for item in result['items'] if not item['is_local']]
 
     return result
 
@@ -26,17 +24,18 @@ def getAsync(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> di
         return result
 
     offsets = [i * 100 for i in get_TaskCount(result['total'], True)]
+    exec_results = []
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        exec_results = [
-            executor.submit(
-                _spotify.playlist_tracks,
-                playlistId,
-                None,
-                100,
-                offset
-            ) for offset in offsets
-        ]
+        for offset in offsets:
+            exec_results.append(
+                executor.submit(
+                    _spotify.playlist_tracks,
+                    playlistId,
+                    None,
+                    100,
+                    offset
+                ))
 
         executor_results = [f.result()["items"]
                             for f in concurrent.futures.as_completed(exec_results)]
@@ -82,7 +81,7 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
             for j in get_TaskCount(len(tracks_to_add))]
 
 
-def get_TaskCount(x, start_at_1=False):
+def get_TaskCount(x, start_at_1=False) -> range:
     # Spotify's API wont allow more than 100 songs per POST:
     # https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/#body-parameters:~:text=A%20maximum%20of%20100
 
@@ -102,7 +101,7 @@ def clear(_spotify: spotipy.Spotify, playlistId: str):
         )
 
 
-def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
+def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
     import datetime
     try:
         lastEditStr = _spotify.playlist_tracks(playlist_id, limit=10)["items"]
@@ -121,66 +120,69 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str):
     datetime_current = int(f"{d.year}{d.strftime('%W')}")
     datetime_lastEdit = int(f"{l.year}{l.strftime('%W')}")
 
-    print(
-        f"Current Week: {datetime_current}\nLast edit:    {datetime_lastEdit}")
+    print("Current Week:{:<0}\nLast edit:{:<0}".format(
+        datetime_current, datetime_lastEdit))
+
     if datetime_current > datetime_lastEdit:
         print("continuing")
         return False
     return True
 
 
-def deduplify_list(main_list: list, base_list: list, disabled: list):
+def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
     def print_diff(a, b):
         print("Duplicate Meta:\n{:>32}|{:<0}".format(
             a['track']['name'], b['name']))
+
+        art_a, art_b = f"{a['track']['artists'][0]['name']}", f"{b['artists'][0]}"
+        for artist_a, artist_b in zip(a['track']['artists'][1:], b["artists"][1:]):
+            art_a += f", {artist_a['name']}"
+            art_b += f", {artist_b}"
+        print("{:>32}|{:<0}".format(art_a, art_b))
+
         print("{:>32}|{:<0}".format(
             a['track']['id'], b['id']))
-        art_a, art_b = a['track']['artists'][0]['name'], b['artists'][0]
-        for artist in a['track']['artists'][1:]:
-            art_a += f", {artist['name']}"
-        for artist in b["artists"][1:]:
-            art_b += f", {artist}"
-        print("{:>32}|{:<0}".format(art_a, art_b))
 
     def track_to_seen(track):
         return {
             "name": track['name'],
             "artists": [artist['name'] for artist in track['artists']],
             "duration": track['duration_ms'],
-            "id": track['id']
+            "id": track['id'],
         }
 
+    def inner(xt):
+        for y in seen_tracks:
+            if xt["id"] == y["id"]:
+                print("Duplicate ID: {0:30}{1}".format(
+                    y['name'], f"{xt['id']}|{y['id']}"))
+                seen_tracks.append(track_to_seen(xt))
+                return False
+
+            conditions = (
+                # if duration somewhat same, artist and track name same
+                abs(y["duration"] - xt["duration_ms"]) <= 100,
+                xt["name"] == y["name"],
+            )
+            if all(conditions):
+                for artist in xt["artists"]:
+                    if artist['name'] in y["artists"]:
+                        seen_tracks.append(track_to_seen(xt))
+                        print_diff(x, y)
+                        return False
+        seen_tracks.append(track_to_seen(xt))
+        return True
+
     seen_tracks = [track_to_seen(track['track']) for track in base_list]
+
+    new_main = []
 
     for x in main_list:
         xt = x['track']  # means x_track
         if xt['uri'] in disabled:
             print(f"Disabled: {xt['id']}")
-            main_list.remove(x)
             continue
+        if inner(xt):
+            new_main.append(x)
 
-        def inner():
-            for y in seen_tracks:
-                if xt["id"] == y["id"]:
-                    print("Duplicate ID: {0:30}{1}".format(
-                        y['name'], f"{xt['id']}|{y['id']}"))
-                    seen_tracks.append(track_to_seen(xt))
-                    main_list.remove(x)
-                    return
-
-                conditions = (
-                    # if duration somewhat same, artist and track name same
-                    abs(y["duration"] - xt["duration_ms"]) <= 100,
-                    xt["name"] == y["name"],
-                )
-                if all(conditions):
-                    for artist in xt["artists"]:
-                        if artist['name'] in y["artists"]:
-                            seen_tracks.append(track_to_seen(xt))
-                            print_diff(x, y)
-                            main_list.remove(x)
-                            return
-            seen_tracks.append(track_to_seen(xt))
-        inner()
-
-    return main_list
+    return new_main

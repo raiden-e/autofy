@@ -49,6 +49,7 @@ def get_newest_by_artist(artist):
 
 
 def main():
+    print("To add an artist to the radar, run script with artist uri as argument")
     if playlist.edited_this_week(_spotify, dubstep_id):
         print("Exiting")
         return
@@ -72,16 +73,21 @@ def main():
     )
 
 
-def new_artist(artist):
-    x = gist.load(gist_name)
-    if artist in x:
+def new_artist(artist: str):
+    artist = artist.strip()
+    if artist[0:8] == "spotify:" and artist[8:14] != "artist":
+        print("Please make sure to pass an artist")
         return False
     try:
         artist = _spotify.artist(artist_id=artist)
-    except:
-        raise f"Please make sure artist {artist} exists"
-    x.append(artist['id'])
-    x.sort()
+    except Exception as e:
+        raise AttributeError(f"Please make sure artist {artist} exists\n", e)
+
+    x = gist.load(gist_name)
+    if artist in x:
+        print("Artist already in radar")
+        return False
+    x.append(artist['id']).sort()
     gist.update(gist_name, x, f"Add artist: {artist['id']} ({artist['name']})")
 
 

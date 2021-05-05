@@ -25,6 +25,7 @@ _Scripts that automatically backup, update Spotify playlists etc._
 ## Lofi ☕
 
 A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).
+
 Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me study, code, play games, and relax.
 
 ## Backup 📚
