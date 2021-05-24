@@ -21,7 +21,9 @@ def get_newest_by_artist(artist):
         artist_albums = _spotify.artist_albums(
             artist_id=artist, album_type='single,album,compilation')['items']
     except Exception as e:
-        raise Exception(f"Could not get latest album for {artist}, {e}")
+        print(f"Could not get latest album for {artist}")
+        print(e)
+        return
 
     def sorter(input):
         return input['release_date']
