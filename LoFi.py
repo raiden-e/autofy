@@ -25,7 +25,7 @@ def randomize_lofi(initial_track: dict, lofi_base: list, lofi_list: list):
         final_sample = random.sample([*lofi_base, *list_sample], list_size)
         return [z["track"]["id"] for z in [initial_track, *final_sample]]
     except Exception:
-        raise "Could not sample lofibase or lofilist"
+        raise Exception("Could not sample lofibase or lofilist")
 
 
 def main(id: str, backup: str, base: str):

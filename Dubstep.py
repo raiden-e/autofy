@@ -5,7 +5,7 @@ import sys
 try:
     import config
 except ImportError:
-    raise "Please make sure you rename config_template.py to config.py"
+    raise ImportError("Please make sure you rename config_template.py to config.py")
 from util import gist, playlist
 from util.spotify import get_spotify_client
 
@@ -21,7 +21,7 @@ def get_newest_by_artist(artist):
         artist_albums = _spotify.artist_albums(
             artist_id=artist, album_type='single,album,compilation')['items']
     except Exception as e:
-        raise f"Could not get latest album for {artist}, {e}"
+        raise Exception(f"Could not get latest album for {artist}, {e}")
 
     def sorter(input):
         return input['release_date']
@@ -97,4 +97,4 @@ if __name__ == '__main__':
     elif len(sys.argv) == 2:
         new_artist(sys.argv[1])
     else:
-        raise "Dubstep.py takes up to 1 arg"
+        raise AttributeError("Dubstep.py takes up to 1 arg")

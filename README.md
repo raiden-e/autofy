@@ -65,6 +65,11 @@ If the latest release was an album, it picks the 2-5 most popular tracks.
 Show the currently playing song on Spotify and get the artist, song name, album name, and cover.
 This script continuously  saves the name of the song, artist, and album in a text file in the user's home folder.
 
+```powershell
+.\venv\Scripts\activate.ps1
+python .\NowPlayling.py
+```
+
 ## Examples
 
 ### Example Lofi

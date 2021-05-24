@@ -17,7 +17,7 @@ def get_spotify_client():
                 with open(cache_path, 'w') as f:
                     f.write(config.SPOTIPYCACHE)
             else:
-                raise "Please make sure that you get a spotipy cache string and place it into config.py"
+                raise Exception("Please make sure that you get a spotipy cache string and place it into config.py")
 
         # print(f"{cache_path} EXISTS: {os.path.exists(cache_path)}")
         _spotify = spotipy.Spotify(

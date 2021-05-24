@@ -34,12 +34,14 @@ def try_write(file: str, text: str):
     try:
         with open(file, 'w', encoding='utf-8-sig') as f:
             f.write(text)
+            print(f"Wrote: {file}")
     except Exception as e:
         print(f"Couldnt write {file}\n{e}")
 
 
 def main(repeat=True):
     path = get_docs_folder()
+    print(f"Writing to: {path}")
     _spotify = get_spotify_client()
     old_id = False
 
@@ -63,14 +65,15 @@ def main(repeat=True):
             'SpotifyNPartist.txt': playback['item']['artists'][0]['name'],
         }
         for key in texts:
-            try_write(os.path.join(path, key[0]), key[1])
+            try_write(os.path.join(path, key), texts[key])
+
+        folder = os.path.join(os.getenv('APPDATA'), 'slobs-client', 'Media')
+        pics = [x for x in Path(folder).glob('*-SpotifyNP.jpg')]
+        snp_pic = "SpotifyNP.jpg" if len(pics) == 0 else pics[0]
 
         get_np_pic(
             playback['item']['album']['images'][0]['url'],
-            os.path.join(
-                os.getenv('APPDATA'),
-                'slobs-client', 'Media', '505581849-SpotifyNP.jpg'
-            )
+            os.path.join(folder, snp_pic)
         )
 
         print(f"{playback['item']['id']}\n{full_text}")
