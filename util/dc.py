@@ -7,7 +7,7 @@ import discord
 webhook_url = f"https://discordapp.com/api/webhooks/{config.DCGUILD}/{config.DCTOKEN}"
 
 
-async def send_webhook(message, username = None):
+async def send_webhook(message, username=None):
     async with aiohttp.ClientSession() as session:
         webhook = discord.Webhook.from_url(
             webhook_url, adapter=discord.AsyncWebhookAdapter(session))

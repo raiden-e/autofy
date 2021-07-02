@@ -19,8 +19,12 @@ def get_telegram_client():
         with TelegramClient(StringSession(config.TELEST), config.TELEID, config.TELEHASH) as client:
             return client
     except Exception:
-        raise ImportError(
-            "Couldn't initialize client, did you set ur TELEST in config.py?")
+        try:
+            with TelegramClient('Raiden', config.TELEID, config.TELEHASH) as client:
+                return client
+        except Exception:
+            raise ImportError(
+                "Couldn't initialize client, did you set ur TELEST in config.py?")
 
 
 if __name__ == "__main__":

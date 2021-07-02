@@ -17,7 +17,8 @@ def get_spotify_client():
                 with open(cache_path, 'w') as f:
                     f.write(config.SPOTIPYCACHE)
             else:
-                raise Exception("Please make sure that you get a spotipy cache string and place it into config.py")
+                raise Exception(
+                    "Please make sure that you get a spotipy cache string and place it into config.py")
 
         # print(f"{cache_path} EXISTS: {os.path.exists(cache_path)}")
         _spotify = spotipy.Spotify(
@@ -32,4 +33,4 @@ def get_spotify_client():
         )
         return _spotify
     except Exception as e:
-        raise(f"ERROR Can't get token for {config.SPOTIPYUN}", e)
+        raise Exception(f"ERROR Can't get token for {config.SPOTIPYUN}", e)

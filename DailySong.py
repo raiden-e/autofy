@@ -40,9 +40,7 @@ def get_todays_tracks(Data):
 
 async def message_sent_today():
     result = await client(functions.messages.GetScheduledHistoryRequest(
-        peer='TrackDesTages',
-        hash=0
-    ))
+        peer='TrackDesTages', hash=0))
     if result.count != 0:
         print("Todays Track scheduled and will be sent at 12pm")
         return True

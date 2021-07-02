@@ -6,6 +6,7 @@ logs/
 .vscode/
 spotify.cache
 config.py
+*.session
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

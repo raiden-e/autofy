@@ -39,7 +39,7 @@ def main(id: str, backup: str, base: str):
     lofi_base = playlist.get(_spotify, base, True)['items']
 
     print("deduplifying list")
-    lofi_list = playlist.deduplify_list(lofi_list, lofi_base, disabled)
+    lofi_list = playlist.deduplify_list(lofi_list, lofi_base, disabled, True)
 
     initial_track = random.choice(lofi_base)
     lofi_base.remove(initial_track)

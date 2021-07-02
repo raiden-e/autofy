@@ -30,7 +30,7 @@ class unit_tests(unittest.TestCase):
         DateLike = float, datetime.datetime, datetime.date, datetime.timedelta
         self.assertIn(type(DailySong.get_twelve_pm()), DateLike)
 
-    def test_testingOff(self):
+    def test_aTestingOff(self):
         self.assertFalse(DailySong.test)
 
     def test_zget_playlist(self):
@@ -45,27 +45,23 @@ class unit_tests(unittest.TestCase):
         print("")
         _spotify = get_spotify_client()
 
-        args = (
-            _spotify,
-            "31k9ZXIfUi9v5mpbfg6FQH",
-            True
-        )
-
+        args = (_spotify, "58RURV6kkw77FMF2ByQIe7", True)
         got_sync = timer_wrapper(playlist.get, *args)
         got_async = timer_wrapper(playlist.getAsync, *args)
 
         self.assertIsNotNone(got_sync)
         self.assertIsNotNone(got_async)
+        self.assertEqual(len(got_sync['items']), 100)
+        self.assertEqual(len(got_async['items']), 100)
 
-        sync_list, async_list = [], []
-        for x in got_async['items']:
-            async_list.append(x['track']['id'])
-
-        for x in got_sync['items']:
-            sync_list.append(x['track']['id'])
+        sync_list = [x['track']['id'] for x in got_sync['items']]
+        async_list = [x['track']['id'] for x in got_async['items']]
 
         self.assertEqual(set(sync_list), set(async_list))
         self.assertRaises(Exception, playlist.get)
+
+    def test_dedup(self):
+        print("")
 
 
 if __name__ == '__main__':

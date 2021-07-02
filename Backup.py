@@ -9,63 +9,26 @@ def filter(playlist):
     for track in playlist:
         try:
             if track['track']['id']:
-                tracks.append(track["track"])
+                tracks.append(track)
         except TypeError as e:
             print(f"Electronic rising doing its thing?\n{e}")
-            exceptions.append([e, track])
+            exceptions.append([e, track, playlist['id']])
         except Exception as e:
             print(f"An error has occured in {track}\n{e}")
-            exceptions.append([e, track])
+            exceptions.append([e, track, playlist['id']])
     return tracks
 
 
 def backup_playlist(pl: dict):
     pprint(pl, width=120)
-    caught = []
-    Get = []
-    for x in pl["get"]:
-        print(f"loading: {x}")
-        Get.extend(playlist.getAsync(_spotify, x, publicOnly=True)["items"])
 
+    Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
 
     Get = filter(Get)
     Set = filter(Set)
 
-    def track_to_seen(track):
-        return {
-            "name": track['name'],
-            "artist": track['artists'][0]['name'],
-            "duration": track['duration_ms'],
-            "id": track['id']
-        }
-
-    seen_tracks = [track_to_seen(tr) for tr in Set]
-
-    def filter2(track):
-        if track['id'] in disabled:
-            return False
-        for x in seen_tracks:
-            if x['id'] == track['id']:
-                seen_tracks.append(track_to_seen(track))
-                return False
-
-            conditions = (
-                x['name'] == track['name'],
-                x['artist'] == track['artists'][0]['name'],
-                abs(x['duration'] - track['duration_ms']) <= 100
-            )
-            if all(conditions):
-                seen_tracks.append(track_to_seen(track))
-                caught.append(x)
-                return False
-        seen_tracks.append(track_to_seen(track))
-        return True
-
-    ToAdd = []
-    for track in Get:
-        if filter2(track):
-            ToAdd.append(track['id'])
+    ToAdd = playlist.deduplify_list(main_list=Get, base_list=Set)
 
     if ToAdd:
         try:
@@ -74,9 +37,7 @@ def backup_playlist(pl: dict):
         except Exception as e:
             print(e)
     else:
-        print(f"{pl['set']} is already up to date", end=None)
-
-    print(f"Caught: {len(caught)}")
+        print(f"Already up to date: {pl['set']}", end=None)
 
 
 def main():
