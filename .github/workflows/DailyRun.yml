@@ -42,6 +42,7 @@ jobs:
       - name: Write config.py
         run: |
           if [ -f config.py ]; then rm -f "config.py"; fi
+
           echo "TELEID      =\"${{ secrets.TELEID }}\""       >>config.py
           echo "TELEHASH    =\"${{ secrets.TELEHASH }}\""     >>config.py
           echo "TELEST      =\"${{ secrets.TELEST }}\""       >>config.py
@@ -52,11 +53,11 @@ jobs:
           echo "SPOTIPYUN   =\"${{ secrets.SPOTIPYUN }}\""    >>config.py
           echo "SPOTIPYTG   =\"${{ secrets.SPOTIPYTG }}\""    >>config.py
           echo "SPOTIPYSP   =\"${{ secrets.SPOTIPYSP }}\""    >>config.py
-          echo "SPOTIPYCACHE='${{ secrets.SPOTIPYCACHE }}'" >>config.py
+          echo "SPOTIPYCACHE='${{ secrets.SPOTIPYCACHE }}'"   >>config.py
           echo "GISTTOKEN   =\"${{ secrets.GISTTOKEN }}\""    >>config.py
           echo "GISTID      =\"${{ secrets.GISTID }}\""       >>config.py
-          echo "DCTOKEN     =\"${{ secrets.DCTOKEN }}\""      >>config.py
-          echo "DCGUILD     =\"${{ secrets.DCGUILD }}\""      >>config.py
+          echo "NEWS_URL    =\"${{ secrets.NEWS_URL }}\""     >>config.py
+          echo "ERROR_URL   =\"${{ secrets.ERROR_URL }}\""    >>config.py
 
           echo Wrote TELEID, TELEHASH, TELEST, GISTTOKEN, GISTID, DCTOKEN, DCGUILD
           echo SPOTIPYUN, SPOTIPYTG, SPOTIPYSP, SPOTIPYID, SPOTIPYHS, SPOTIPYRU, SPOTIPYSC, SPOTIPYCACHE

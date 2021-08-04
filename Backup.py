@@ -1,7 +1,18 @@
-from pprint import pprint
+import asyncio
+from pprint import pformat, pprint
 
-from util import gist, playlist
+from util import dc, gist, playlist
 from util.spotify import get_spotify_client
+
+
+def print_exceptions(exceptions):
+    err_msg = f"Exceptions ({len(exceptions)}):\n" + pformat(exceptions)
+    print(err_msg)
+    if len(exceptions) > 0:
+        try:
+            asyncio.get_event_loop().run_until_complete(dc.error_log(err_msg))
+        except Exception as e:
+            print("DC broken?", e)
 
 
 def filter(playlist):
@@ -28,12 +39,13 @@ def backup_playlist(pl: dict):
     Get = filter(Get)
     Set = filter(Set)
 
-    ToAdd = playlist.deduplify_list(main_list=Get, base_list=Set)
+    ToAdd = playlist.deduplify_list(main_list=Get, base_list=Set, disabled=disabled)
 
-    if ToAdd:
+    if len(ToAdd) > 0:
         try:
             playlist.addAsync(_spotify, ToAdd, pl['set'])
-            pprint(f"Added: {len(ToAdd)}{ToAdd}")
+            print(f"Added: {len(ToAdd)}")
+            pprint(ToAdd, depth=2)
         except Exception as e:
             print(e)
     else:
@@ -47,8 +59,7 @@ def main():
     for playlist in playlists["playlist"]:
         backup_playlist(playlists["playlist"][playlist])
 
-    print("Exceptions:")
-    pprint(exceptions)
+    print_exceptions(exceptions)
     print("Done")
 
 

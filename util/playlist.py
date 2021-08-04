@@ -129,23 +129,15 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
     return True
 
 
-def deduplify_list(main_list: list, base_list: list, disabled: list = [], print_disabled: bool = False) -> list:
-    def print_dis(input):
-        if print_disabled:
-            print(input)
-
+def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
     def print_diff(a, b):
-        if not print_disabled:
-            return
-
-        print("Duplicate Meta:\n{:>32}|{:<0}".format(a['track']['name'], b['name']))
         art_a, art_b = f"{a['track']['artists'][0]['name']}", f"{b['artists'][0]}"
         for artist_a, artist_b in zip(a['track']['artists'][1:], b["artists"][1:]):
             art_a += f", {artist_a['name']}"
             art_b += f", {artist_b}"
-        print("{:>32}|{:<0}".format(art_a, art_b))
-
-        print("{:>32}|{:<0}".format(a['track']['id'], b['id']))
+        print("Duplicate Meta:")
+        print("{:>30}|{:>30}|{:>30}".format(a['track']['name'], art_a, a['track']['id']))
+        print("{:>30}|{:>30}|{:>30}".format(b['name'], art_b, b['id']))
 
     def track_to_seen(track):
         return {
@@ -158,7 +150,7 @@ def deduplify_list(main_list: list, base_list: list, disabled: list = [], print_
     def inner(xt):
         for y in seen_tracks:
             if xt["id"] == y["id"]:
-                print_dis("Duplicate ID: {0:30}{1}".format(y['name'], f"{xt['id']}|{y['id']}"))
+                print("Duplicate ID: {0:30}{1}".format(y['name'], f"{xt['id']}|{y['id']}"))
                 return False
 
             # if duration somewhat same, artist and track name same
@@ -177,10 +169,9 @@ def deduplify_list(main_list: list, base_list: list, disabled: list = [], print_
     for x in main_list:
         xt = x['track']  # means x_track
         if xt['uri'] in disabled:
-            if print_dis:
-                print_dis(f"Disabled: {xt['id']}")
+            print(f"Disabled: {xt['id']}")
         elif inner(xt):
-            new_main.append(x)
+            new_main.append(xt['uri'])
         seen_tracks.append(track_to_seen(xt))
 
     return new_main
