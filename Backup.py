@@ -15,29 +15,18 @@ def print_exceptions(exceptions):
             print("DC broken?", e)
 
 
-def filter(playlist):
-    tracks = []
-    for track in playlist:
-        try:
-            if track['track']['id']:
-                tracks.append(track)
-        except TypeError as e:
-            print(f"Electronic rising doing its thing?\n{e}")
-            exceptions.append([e, track, playlist['id']])
-        except Exception as e:
-            print(f"An error has occured in {track}\n{e}")
-            exceptions.append([e, track, playlist['id']])
-    return tracks
-
-
 def backup_playlist(pl: dict):
     pprint(pl, width=120)
 
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
 
-    Get = filter(Get)
-    Set = filter(Set)
+    try:
+        Get = [track for track in Get if track['track']]
+        Set = [track for track in Set if track['track']]
+    except Exception as e:
+        print(e)
+        exceptions.append(e)
 
     ToAdd = playlist.deduplify_list(main_list=Get, base_list=Set, disabled=disabled)
 
@@ -48,6 +37,7 @@ def backup_playlist(pl: dict):
             pprint(ToAdd, depth=2)
         except Exception as e:
             print(e)
+            exceptions.append(e)
     else:
         print(f"Already up to date: {pl['set']}", end=None)
 
