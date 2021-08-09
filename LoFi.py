@@ -23,7 +23,7 @@ def randomize_tracks(initial_track: dict, lofi_base: list, lofi_list: list):
         list_size = 250 - 1  # We count -1 bc of initial track
         list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
         final_sample = random.sample([*lofi_base, *list_sample], list_size)
-        return [z["track"]["id"] for z in [initial_track, *final_sample]]
+        return [x['track']['uri'] for x in [initial_track, *final_sample]]
     except Exception:
         raise Exception("Could not sample lofibase or lofilist")
 

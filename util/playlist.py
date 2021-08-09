@@ -171,7 +171,7 @@ def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
         if xt['uri'] in disabled:
             print(f"Disabled: {xt['id']}")
         elif inner(xt):
-            new_main.append(xt['uri'])
+            new_main.append(x)
         seen_tracks.append(track_to_seen(xt))
 
     return new_main

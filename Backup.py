@@ -28,9 +28,10 @@ def backup_playlist(pl: dict, disabled):
         print(e)
         exceptions.append(e)
 
-    ToAdd = playlist.deduplify_list(main_list=Get, base_list=Set, disabled=disabled)
+    Tracks = playlist.deduplify_list(main_list=Get, base_list=Set, disabled=disabled)
 
-    if len(ToAdd) > 0:
+    if len(Tracks) > 0:
+        ToAdd = [z['track']['uri'] for z in Tracks]
         try:
             playlist.addAsync(_spotify, ToAdd, pl['set'])
             print(f"Added: {len(ToAdd)}")
