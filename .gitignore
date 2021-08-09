@@ -1,12 +1,13 @@
 # mystuff
 
+.vscode/
 logs/
 *.jpg
 *.session-journal
-.vscode/
-spotify.cache
-config.py
 *.session
+spotify.cache
+images.py
+config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

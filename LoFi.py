@@ -18,7 +18,7 @@ japan = {
 }
 
 
-def randomize_lofi(initial_track: dict, lofi_base: list, lofi_list: list):
+def randomize_tracks(initial_track: dict, lofi_base: list, lofi_list: list):
     try:
         list_size = 250 - 1  # We count -1 bc of initial track
         list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
@@ -39,14 +39,14 @@ def main(id: str, backup: str, base: str):
     lofi_base = playlist.get(_spotify, base, True)['items']
 
     print("deduplifying list")
-    lofi_list = playlist.deduplify_list(lofi_list, lofi_base, disabled, True)
+    lofi_list = playlist.deduplify_list(lofi_list, lofi_base, disabled)
 
     initial_track = random.choice(lofi_base)
     lofi_base.remove(initial_track)
     print(f"chose the initial track: {initial_track['track']['name']}")
 
     print("randomizing")
-    weekly_playlistIds = randomize_lofi(initial_track, lofi_base, lofi_list)
+    weekly_playlistIds = randomize_tracks(initial_track, lofi_base, lofi_list)
 
     print("clearing playlist")
     playlist.clear(_spotify, id)

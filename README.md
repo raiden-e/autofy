@@ -99,6 +99,7 @@ python Dubstep.py
 ### Example Backup
 
 ```powershell
+# requires a gist with a file called "backup.json" see above
 python Backup.py
 ```
 
@@ -127,14 +128,14 @@ Save your api hashes and id's to `config.py`
 
 Install [Python](https://www.python.org/downloads)
 
-Open Powershell/CMD and run the following commands:
+Open Powershell/CMD/bash and run the following commands:
 
 ```powershell
 # if you are unfamiliar with virtual environments, you can read up on them here:
 # https://docs.python.org/3/tutorial/venv.html
 python -m venv venv
 
-.\venv\Scripts\activate.ps1
+./venv/Scripts/activate.ps1
 
 pip install -r requirements.txt
 ```

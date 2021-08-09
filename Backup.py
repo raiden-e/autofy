@@ -15,7 +15,7 @@ def print_exceptions(exceptions):
             print("DC broken?", e)
 
 
-def backup_playlist(pl: dict):
+def backup_playlist(pl: dict, disabled):
     pprint(pl, width=120)
 
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
@@ -43,11 +43,13 @@ def backup_playlist(pl: dict):
 
 
 def main():
+    print("Loading disabled.json")
+    disabled = gist.load("disabled.json")
     print("Loading backup.json")
     playlists = gist.load("backup.json")
 
     for playlist in playlists["playlist"]:
-        backup_playlist(playlists["playlist"][playlist])
+        backup_playlist(playlists["playlist"][playlist], disabled)
 
     print_exceptions(exceptions)
     print("Done")
@@ -56,6 +58,4 @@ def main():
 if __name__ == '__main__':
     _spotify = get_spotify_client()
     exceptions = []
-    print("Loading disabled.json")
-    disabled = gist.load("disabled.json")
     main()
