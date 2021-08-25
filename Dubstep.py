@@ -12,7 +12,7 @@ from util.spotify import get_spotify_client
 username = config.SPOTIPYUN
 dubstep_id = "6XnpwiV7hkEUMh4UsMapm2"
 _spotify = get_spotify_client()
-gist_name = "dubstep.json"
+gist_name = "autofy.json"
 
 
 def get_newest_by_artist(artist):
@@ -60,8 +60,9 @@ def main():
     playlist.clear(_spotify, dubstep_id)
 
     gist_list = gist.load(gist_name)
+    dub_list = gist_list['dubstep']
 
-    ids = [x['id'] for art in gist_list for x in get_newest_by_artist(art)]
+    ids = [x['id'] for art in dub_list for x in get_newest_by_artist(art)]
 
     # randomize and no doubles
     ids = list(set(ids))
@@ -85,12 +86,16 @@ def new_artist(artist: str):
     except Exception as e:
         raise AttributeError(f"Please make sure artist {artist} exists\n", e)
 
-    x = gist.load(gist_name)
-    if artist in x:
+    gist_list = gist.load(gist_name)
+    dub_list = gist_list['dubstep']
+    if artist['id'] in dub_list:
         print("Artist already in radar")
         return False
-    x.append(artist['id']).sort()
-    gist.update(gist_name, x, f"Add artist: {artist['id']} ({artist['name']})")
+    dub_list.append(artist['id'])
+    dub_list.sort()
+    gist_list['dubstep'] = dub_list
+    print(f"added {artist['name']}")
+    gist.update(gist_name, gist_list, f"Add artist: {artist['id']} ({artist['name']})")
 
 
 if __name__ == '__main__':

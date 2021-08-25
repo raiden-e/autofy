@@ -37,7 +37,7 @@ Check out the [Night Rider Playlist](https://open.spotify.com/playlist/37i9dQZF1
 
 ### Requirements for Backup
 
-You need to go to [gist.github.com](https://gist.github.com) and create a gist with a file called `backup.json`
+You need to go to [gist.github.com](https://gist.github.com) and create a gist with a file called `autofy.json`
 
 ### Image
 
@@ -99,7 +99,7 @@ python Dubstep.py
 ### Example Backup
 
 ```powershell
-# requires a gist with a file called "backup.json" see above
+# requires a gist with a file called "autofy.json" see above
 python Backup.py
 ```
 

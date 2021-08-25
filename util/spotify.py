@@ -1,8 +1,12 @@
 import os
 from os.path import dirname
 
-import config
 import spotipy
+
+try:
+    import config
+except ImportError:
+    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 
 def get_spotify_client():

@@ -12,7 +12,7 @@ from util.spotify import get_spotify_client
 
 
 def get_docs_folder():
-    if not os.name == 'nt':
+    if os.name != 'nt':
         return "/user/docs/"
     CSIDL_PERSONAL = 5       # My Documents
     SHGFP_TYPE_CURRENT = 0   # Get current, not default value

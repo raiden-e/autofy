@@ -1,6 +1,10 @@
-import config
 from telethon import TelegramClient, events, sync
 from telethon.sessions import StringSession
+
+try:
+    import config
+except ImportError:
+    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 
 def send_main(msg):

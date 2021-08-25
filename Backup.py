@@ -20,6 +20,8 @@ def backup_playlist(pl: dict, disabled):
 
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
+    print(f"Exporting to: {pl['set']}")
+
 
     try:
         Get = [track for track in Get if track['track']]
@@ -44,13 +46,8 @@ def backup_playlist(pl: dict, disabled):
 
 
 def main():
-    print("Loading disabled.json")
-    disabled = gist.load("disabled.json")
-    print("Loading backup.json")
-    playlists = gist.load("backup.json")
-
-    for playlist in playlists["playlist"]:
-        backup_playlist(playlists["playlist"][playlist], disabled)
+    for playlist in data["backup"]:
+        backup_playlist(data["backup"][playlist], disabled)
 
     print_exceptions(exceptions)
     print("Done")
@@ -58,5 +55,8 @@ def main():
 
 if __name__ == '__main__':
     _spotify = get_spotify_client()
+    print("Loading autofy.json")
+    data = gist.load("autofy.json")
+    disabled = playlist.getAsync(_spotify, data['disabled'])['items']
     exceptions = []
     main()

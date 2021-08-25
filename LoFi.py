@@ -18,17 +18,16 @@ japan = {
 }
 
 
-def randomize_tracks(initial_track: dict, lofi_base: list, lofi_list: list):
-    try:
-        list_size = 250 - 1  # We count -1 bc of initial track
-        list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
-        final_sample = random.sample([*lofi_base, *list_sample], list_size)
-        return [x['track']['uri'] for x in [initial_track, *final_sample]]
-    except Exception:
-        raise Exception("Could not sample lofibase or lofilist")
-
-
 def main(id: str, backup: str, base: str):
+    def randomize_tracks(lofi_base: list, lofi_list: list):
+        try:
+            list_size = 250 - 1  # We count -1 bc of initial track
+            list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
+            final_sample = random.sample(lofi_base + list_sample, list_size)
+            return [x['track']['uri'] for x in [initial_track, *final_sample]]
+        except Exception:
+            raise Exception("Could not sample lofibase or lofilist")
+
     if playlist.edited_this_week(_spotify, id):
         print("Exiting, Ran this week")
         return
@@ -46,7 +45,8 @@ def main(id: str, backup: str, base: str):
     print(f"chose the initial track: {initial_track['track']['name']}")
 
     print("randomizing")
-    weekly_playlistIds = randomize_tracks(initial_track, lofi_base, lofi_list)
+    weekly_playlistIds = randomize_tracks(lofi_base, lofi_list)
+    print(weekly_playlistIds)
 
     print("clearing playlist")
     playlist.clear(_spotify, id)
@@ -62,7 +62,8 @@ def main(id: str, backup: str, base: str):
 if __name__ == '__main__':
     _spotify = get_spotify_client()
     print("loading disabled tracks...")
-    disabled = gist.load("disabled.json")
+    data = gist.load("autofy.json")
+    disabled = playlist.getAsync(_spotify, data['disabled'])["items"]
     for x in (lofi, japan):
         print(f'shuffeling {x["name"]}')
         main(x['id'], x['backup'], x['base'])

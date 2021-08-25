@@ -63,7 +63,7 @@ class unit_tests(unittest.TestCase):
         self.assertRaises(Exception, playlist.get)
 
     def test_dedup(self):
-        print("")
+        print("TODO")
 
 
 if __name__ == '__main__':
