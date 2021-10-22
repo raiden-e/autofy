@@ -32,7 +32,8 @@ def get_spotify_client():
                 client_secret=config.SPOTIPYHS,
                 scope=config.SPOTIPYSC,
                 redirect_uri=config.SPOTIPYRU,
-                cache_path=cache_path
+                cache_path=cache_path,
+                requests_timeout=10
             )
         )
         return _spotify
