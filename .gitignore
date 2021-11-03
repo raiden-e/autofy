@@ -1,10 +1,12 @@
 # mystuff
 
+.vscode/
 logs/
 *.jpg
 *.session-journal
-.vscode/
+*.session
 spotify.cache
+images.py
 config.py
 *.session
 

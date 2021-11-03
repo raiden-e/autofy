@@ -1,8 +1,12 @@
 import os
 from os.path import dirname
 
-import config
 import spotipy
+
+try:
+    import config
+except ImportError:
+    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 
 def get_spotify_client():
@@ -17,7 +21,8 @@ def get_spotify_client():
                 with open(cache_path, 'w') as f:
                     f.write(config.SPOTIPYCACHE)
             else:
-                raise Exception("Please make sure that you get a spotipy cache string and place it into config.py")
+                raise Exception(
+                    "Please make sure that you get a spotipy cache string and place it into config.py")
 
         # print(f"{cache_path} EXISTS: {os.path.exists(cache_path)}")
         _spotify = spotipy.Spotify(
@@ -27,9 +32,10 @@ def get_spotify_client():
                 client_secret=config.SPOTIPYHS,
                 scope=config.SPOTIPYSC,
                 redirect_uri=config.SPOTIPYRU,
-                cache_path=cache_path
+                cache_path=cache_path,
+                requests_timeout=10
             )
         )
         return _spotify
     except Exception as e:
-        raise(f"ERROR Can't get token for {config.SPOTIPYUN}", e)
+        raise Exception(f"ERROR Can't get token for {config.SPOTIPYUN}", e)

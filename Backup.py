@@ -1,99 +1,62 @@
-from pprint import pprint
+import asyncio
+from pprint import pformat, pprint
 
-from util import gist, playlist
+from util import dc, gist, playlist
 from util.spotify import get_spotify_client
 
 
-def filter(playlist):
-    tracks = []
-    for track in playlist:
+def print_exceptions(exceptions):
+    err_msg = f"Exceptions ({len(exceptions)}):\n" + pformat(exceptions)
+    print(err_msg)
+    if len(exceptions) > 0:
         try:
-            if track['track']['id']:
-                tracks.append(track["track"])
-        except TypeError as e:
-            print(f"Electronic rising doing its thing?\n{e}")
-            exceptions.append([e, track])
+            asyncio.get_event_loop().run_until_complete(dc.error_log(err_msg))
         except Exception as e:
-            print(f"An error has occured in {track}\n{e}")
-            exceptions.append([e, track])
-    return tracks
+            print("DC broken?", e)
 
 
-def backup_playlist(pl: dict):
+def backup_playlist(pl: dict, disabled):
     pprint(pl, width=120)
-    caught = []
-    Get = []
-    for x in pl["get"]:
-        print(f"loading: {x}")
-        Get.extend(playlist.getAsync(_spotify, x, publicOnly=True)["items"])
 
+    Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
+    print(f"Exporting to: {pl['set']}")
 
-    Get = filter(Get)
-    Set = filter(Set)
 
-    def track_to_seen(track):
-        return {
-            "name": track['name'],
-            "artist": track['artists'][0]['name'],
-            "duration": track['duration_ms'],
-            "id": track['id']
-        }
+    try:
+        Get = [track for track in Get if track['track']]
+        Set = [track for track in Set if track['track']]
+    except Exception as e:
+        print(e)
+        exceptions.append(e)
 
-    seen_tracks = [track_to_seen(tr) for tr in Set]
+    Tracks = playlist.deduplify_list(main_list=Get, base_list=Set, disabled=disabled)
 
-    def filter2(track):
-        if track['id'] in disabled:
-            return False
-        for x in seen_tracks:
-            if x['id'] == track['id']:
-                seen_tracks.append(track_to_seen(track))
-                return False
-
-            conditions = (
-                x['name'] == track['name'],
-                x['artist'] == track['artists'][0]['name'],
-                abs(x['duration'] - track['duration_ms']) <= 100
-            )
-            if all(conditions):
-                seen_tracks.append(track_to_seen(track))
-                caught.append(x)
-                return False
-        seen_tracks.append(track_to_seen(track))
-        return True
-
-    ToAdd = []
-    for track in Get:
-        if filter2(track):
-            ToAdd.append(track['id'])
-
-    if ToAdd:
+    if len(Tracks) > 0:
+        ToAdd = [z['track']['uri'] for z in Tracks]
         try:
             playlist.addAsync(_spotify, ToAdd, pl['set'])
-            pprint(f"Added: {len(ToAdd)}{ToAdd}")
+            print(f"Added: {len(ToAdd)}")
+            pprint(ToAdd, depth=2)
         except Exception as e:
             print(e)
+            exceptions.append(e)
     else:
-        print(f"{pl['set']} is already up to date", end=None)
-
-    print(f"Caught: {len(caught)}")
+        print(f"Already up to date: {pl['set']}", end=None)
 
 
 def main():
-    print("Loading backup.json")
-    playlists = gist.load("backup.json")
+    for playlist in data["backup"]:
+        backup_playlist(data["backup"][playlist], disabled)
 
-    for playlist in playlists["playlist"]:
-        backup_playlist(playlists["playlist"][playlist])
-
-    print("Exceptions:")
-    pprint(exceptions)
+    print_exceptions(exceptions)
     print("Done")
 
 
 if __name__ == '__main__':
     _spotify = get_spotify_client()
+    print("Loading autofy.json")
+    data = gist.load("autofy.json")
+    disabled = playlist.getAsync(_spotify, data['disabled'])['items']
     exceptions = []
-    print("Loading disabled.json")
-    disabled = gist.load("disabled.json")
     main()

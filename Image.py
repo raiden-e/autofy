@@ -8,9 +8,13 @@ from time import strftime
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
-import config
 from util import gist, playlist
 from util.spotify import getsp_client
+
+try:
+    import config
+except ImportError:
+    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 if len(sys.argv) > 3:
     raise TypeError(

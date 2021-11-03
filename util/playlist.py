@@ -43,7 +43,7 @@ def getAsync(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> di
     if publicOnly:
         for x in executor_results:
             for y in x:
-                if not y["track"] is None and not y["is_local"]:
+                if y["track"] is not None and not y["is_local"]:
                     result["items"].append(y)
     else:
         for x in executor_results:
@@ -74,11 +74,11 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
         raise Exception("tracks_to_add has to be parsed!")
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        [executor.submit(
-            _spotify.playlist_add_items,
-            playlistId,
-            tracks_to_add[(j*100):((j+1)*100)])
-            for j in get_TaskCount(len(tracks_to_add))]
+        for j in get_TaskCount(len(tracks_to_add)):
+            executor.submit(
+                _spotify.playlist_add_items,
+                playlistId,
+                tracks_to_add[(j*100):((j+1)*100)])
 
 
 def get_TaskCount(x, start_at_1=False) -> range:
@@ -131,17 +131,13 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
 
 def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
     def print_diff(a, b):
-        print("Duplicate Meta:\n{:>32}|{:<0}".format(
-            a['track']['name'], b['name']))
-
         art_a, art_b = f"{a['track']['artists'][0]['name']}", f"{b['artists'][0]}"
         for artist_a, artist_b in zip(a['track']['artists'][1:], b["artists"][1:]):
             art_a += f", {artist_a['name']}"
             art_b += f", {artist_b}"
-        print("{:>32}|{:<0}".format(art_a, art_b))
-
-        print("{:>32}|{:<0}".format(
-            a['track']['id'], b['id']))
+        print("Duplicate Meta:")
+        print("{:>30}|{:>30}|{:>30}".format(a['track']['name'], art_a, a['track']['id']))
+        print("{:>30}|{:>30}|{:>30}".format(b['name'], art_b, b['id']))
 
     def track_to_seen(track):
         return {
@@ -154,28 +150,25 @@ def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
     def inner(xt):
         for y in seen_tracks:
             if xt["id"] == y["id"]:
-                print("Duplicate ID: {0:30}{1}".format(
-                    y['name'], f"{xt['id']}|{y['id']}"))
+                print("Duplicate ID: {0:30}{1}".format(y['name'], f"{xt['id']}|{y['id']}"))
                 return False
 
-            # if duration somewhat same, artist and track name same
-            if abs(y["duration"] - xt["duration_ms"]) <= 100:
-                if xt["name"] == y["name"]:
+        for y in seen_tracks:
+            if xt["name"] == y["name"]:
+                if abs(y["duration"] - xt["duration_ms"]) <= 100:  # if duration somewhat same
                     for artist in xt["artists"]:
                         if artist['name'] in y["artists"]:
                             print_diff(x, y)
                             return False
         return True
 
-    seen_tracks = [track_to_seen(track['track']) for track in base_list]
+    seen_tracks = [track_to_seen(track['track']) for track in base_list + disabled]
 
     new_main = []
 
     for x in main_list:
         xt = x['track']  # means x_track
-        if xt['uri'] in disabled:
-            print(f"Disabled: {xt['id']}")
-        elif inner(xt):
+        if inner(xt):
             new_main.append(x)
         seen_tracks.append(track_to_seen(xt))
 

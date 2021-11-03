@@ -1,6 +1,10 @@
-import config
 from telethon import TelegramClient, events, sync
 from telethon.sessions import StringSession
+
+try:
+    import config
+except ImportError:
+    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 
 def send_main(msg):
@@ -19,8 +23,12 @@ def get_telegram_client():
         with TelegramClient(StringSession(config.TELEST), config.TELEID, config.TELEHASH) as client:
             return client
     except Exception:
-        raise ImportError(
-            "Couldn't initialize client, did you set ur TELEST in config.py?")
+        try:
+            with TelegramClient('Raiden', config.TELEID, config.TELEHASH) as client:
+                return client
+        except Exception:
+            raise ImportError(
+                "Couldn't initialize client, did you set ur TELEST in config.py?")
 
 
 if __name__ == "__main__":

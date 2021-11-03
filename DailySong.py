@@ -14,7 +14,7 @@ from util.spotify import get_spotify_client
 from util.telegram import get_telegram_client
 
 
-def get_twelve_pm():
+def get_twelve_pm(test=False):
     cest = pytz.timezone('Europe/Berlin')
 
     now = cest.localize(datetime.datetime.now())
@@ -40,9 +40,7 @@ def get_todays_tracks(Data):
 
 async def message_sent_today():
     result = await client(functions.messages.GetScheduledHistoryRequest(
-        peer='TrackDesTages',
-        hash=0
-    ))
+        peer='TrackDesTages', hash=0))
     if result.count != 0:
         print("Todays Track scheduled and will be sent at 12pm")
         return True
