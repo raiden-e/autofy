@@ -7,8 +7,8 @@ try:
 except ImportError:
     raise ImportError("Please make sure you rename config_template.py to config.py")
 
-gist_id = config.GISTID
-token = config.GISTTOKEN
+gist_id = config.GIST['ID']
+token = config.GIST['TOKEN']
 
 gist = Github(token).get_gist(gist_id)
 
