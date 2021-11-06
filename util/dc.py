@@ -9,8 +9,8 @@ except ImportError:
     raise ImportError("Please make sure you rename config_template.py to config.py")
 
 api_url = "https://discordapp.com/api/webhooks"
-webhook_url = f"{api_url}/{config.NEWS_URL}"
-error_log_url = f"{api_url}/{config.ERROR_URL}"
+webhook_url = f"{api_url}/{config.DISCORD['NEWS_URL']}"
+error_log_url = f"{api_url}/{config.DISCORD['ERROR_URLs']}"
 
 
 async def send_webhook(message, username=None, url=webhook_url):

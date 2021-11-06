@@ -9,7 +9,7 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 
 from util import gist, playlist
-from util.spotify import getsp_client
+from util.spotify import get_spotify_client
 
 try:
     import config
@@ -33,9 +33,9 @@ parser.add_argument(
     action="store_true")
 args = parser.parse_args()
 
-gist_name = "backup.json"
+gist_name = "autofy.json"
 
-sp = getsp_client()
+sp = get_spotify_client()
 
 
 def watermark_photo(input_image, output_image):
@@ -61,9 +61,9 @@ def set_newPlaylist(inputPlaylist):
     except Exception:
         raise "Could not receive playlist's. Are you offline?"
 
-    for pl in playlists['playlist']:
-        if inputPlaylist['uri'] in playlists['playlist'][pl]['get'] \
-                or inputPlaylist['uri'] == playlists['playlist'][pl]['get']:
+    for pl in playlists['backup']:
+        if inputPlaylist['uri'] in playlists['backup'][pl]['get'] \
+                or inputPlaylist['uri'] == playlists['backup'][pl]['get']:
             print('Playlist already backed')
             return False
 
@@ -79,7 +79,7 @@ def set_newPlaylist(inputPlaylist):
         raise "Could not get Tracks from the playlist, aborting"
 
     newPlaylist = sp.user_playlist_create(
-        config.SPOTIPYUN,
+        config.SPOTIFY['NAME'],
         playlist_Name,
         public=True,
         description=f"Backup since {strftime('%d')} {strftime('%b')} {strftime('%Y')}"
@@ -97,7 +97,7 @@ def set_newPlaylist(inputPlaylist):
         "get": [inputPlaylist["uri"]], "set": newPlaylist["uri"]}
 
     playlists["playlist"] = collections.OrderedDict(
-        sorted(playlists['playlist'].items()))
+        sorted(playlists['backup'].items()))
 
     comment = f"Add playlist: {playlist_Name} - ({inputPlaylist['uri']})"
     gist.update(gist_name, playlists, comment)
