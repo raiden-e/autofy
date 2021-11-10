@@ -16,7 +16,8 @@ DCGUILD = ""      # guild id of your server
 
 # A small powershell script to escap when using GitHub actions
 #
-# $a = Get-Content config.py -Raw
-# $chars = ("\", '"', "'", "(", ")", "|")
+# $a = Get-Content config.py -Raw -Encoding utf8
+# $chars = ("\", '"', "(", ")")
 # foreach ($char in $chars) { $a = ($a -replace "\$char", "\$char") }
+# $a = ($a -replace "\s*#.*(\n|$)", "`n" -replace "\n{2,}", "`n")
 # $a | Out-File config2.py -Encoding utf8
