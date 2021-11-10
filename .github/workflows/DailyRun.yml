@@ -38,16 +38,16 @@ jobs:
           echo "${{ secrets.config }}" >>config.py
           echo Wrote config
 
-      - name: Sync Time
-        run: |
-          sudo apt-get install ntpdate
-          NEEDS_SYNC=1
-          while [ "$NEEDS_SYNC" -ne "0" ]; do
-              sudo ntpdate -t 4     0.ca.pool.ntp.org
-              NEEDS_SYNC=$?    # If this variable is set ot 0, time sync worked
-              sleep 2
-          done
-          date +%H:%M:%S
+      # - name: Sync Time
+      #   run: |
+      #     sudo apt-get install ntpdate
+      #     NEEDS_SYNC=1
+      #     while [ "$NEEDS_SYNC" -ne "0" ]; do
+      #         sudo ntpdate -t 4     0.ca.pool.ntp.org
+      #         NEEDS_SYNC=$?    # If this variable is set ot 0, time sync worked
+      #         sleep 2
+      #     done
+      #     date +%H:%M:%S
 
       - name: Install dependencies
         run: |
