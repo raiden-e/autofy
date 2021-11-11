@@ -16,11 +16,9 @@ def print_exceptions(exceptions):
 
 
 def backup_playlist(pl: dict, disabled):
-    pprint(pl, width=120)
-
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
-    print(f"Exporting to: {pl['set']}")
+    print(f"  Exporting: {pl['set']}")
 
 
     try:
@@ -42,11 +40,12 @@ def backup_playlist(pl: dict, disabled):
             print(e)
             exceptions.append(e)
     else:
-        print(f"Already up to date: {pl['set']}", end=None)
+        print(f"Already up to date: {pl['set']}", end="\n")
 
 
 def main():
     for playlist in data["backup"]:
+        print(f"Backing up: {playlist}")
         backup_playlist(data["backup"][playlist], disabled)
 
     print_exceptions(exceptions)
