@@ -63,8 +63,9 @@ if __name__ == '__main__':
     ignore = playlist.getAsync(_spotify, data['ignore'])["items"]
 
     for x in (lofi, japan):
+        print(f"Current playlist: {x['name']}")
         if playlist.edited_this_week(_spotify, lofi['id']):
             print(f"Ran this week: {x['name']}")
             continue
-        print(f'shuffeling {x["name"]}')
+        print('shuffeling...')
         main(x['id'], x['backup'], x['base'])

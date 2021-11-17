@@ -135,7 +135,8 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
     datetime_current = int(f"{d.year}{d.strftime('%W')}")
     datetime_lastEdit = int(f"{l.year}{l.strftime('%W')}")
 
-    print(f"Current Week:{datetime_current:<0}\nLast edit:{datetime_lastEdit:<0}")
+    print(f"{'Current Week:':<16}{datetime_current}")
+    print(f"{'Last edit:':<16}{datetime_lastEdit}")
 
     if datetime_current > datetime_lastEdit:
         print("continuing")
