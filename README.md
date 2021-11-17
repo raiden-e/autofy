@@ -6,22 +6,25 @@ _Scripts that automatically backup, update Spotify playlists etc._
 
 ## Licensing 🔑
 
-- [discord.py](https://github.com/Rapptz/discord.py/blob/master/LICENSE)
-- [Pillow](https://github.com/python-pillow/Pillow/blob/master/LICENSE)
-- [pyGithub](https://github.com/PyGithub/PyGithub/blob/master/COPYING)
-- [pytz](https://github.com/stub42/pytz/blob/master/LICENSE.txt)
-- [spotipy](https://github.com/plamere/spotipy/blob/master/LICENSE.md)
-- [telethon](https://github.com/LonamiWebs/Telethon/blob/master/LICENSE)
+| [Pillow][1] | [pyGithub][2] | [pytz][3] | [spotipy][4] | [telethon][5] |
+| ----------- | ------------- | --------- | ------------ | ------------- |
+
+[1]: https://github.com/python-pillow/Pillow/blob/master/LICENSE
+[2]: https://github.com/PyGithub/PyGithub/blob/master/COPYING
+[3]: https://github.com/stub42/pytz/blob/master/LICENSE.txt
+[4]: https://github.com/plamere/spotipy/blob/master/LICENSE.md
+[5]: https://github.com/LonamiWebs/Telethon/blob/master/LICENSE
 
 ## Links 📎
+| [Daily Song][6] | [Discord Daily Song][7] | [Dubstep Radar][8] | [LoFi Playlist][9] | [Track des Tages][10] | [Trappin in Japan][11] |
+| --------------- | ----------------------- | ------------------ | ------------------ | --------------------- | ---------------------- |
 
-- [Daily Song](http://t.me/Daily_Track)
-- [Discord Daily Song](https://discord.gg/wDaVDtx)
-- [Dubstep Radar](https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2)
-- [LoFi Playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA)
-- [Track des Tages](http://t.me/TrackDesTages)
-- [Trappin in Japan](https://open.spotify.com/playlist/6Cu6fL6djm63Em0i93IRUW)
-
+[6]: http://t.me/Daily_Track
+[7]: https://discord.gg/wDaVDtx
+[8]: https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2
+[9]: https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA
+[10]: http://t.me/TrackDesTages
+[11]: https://open.spotify.com/playlist/6Cu6fL6djm63Em0i93IRUW
 ## Lofi ☕
 
 A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).

@@ -21,7 +21,7 @@ def send_main(msg):
 
 def get_telegram_client():
     try:
-        with TelegramClient(StringSession(config.TELEGRAM['Cache']), config.TELEGRAM['ID'], config.TELEGRAM['HASH']) as client:
+        with TelegramClient(StringSession(config.TELEGRAM['CACHE']), config.TELEGRAM['ID'], config.TELEGRAM['HASH']) as client:
             return client
     except Exception:
         try:
@@ -29,7 +29,7 @@ def get_telegram_client():
                 return client
         except Exception:
             raise ImportError(
-                "Couldn't initialize client, did you set ur TELEGRAM['Cache'] in config.py?")
+                "Couldn't initialize client, did you set ur TELEGRAM['CACHE'] in config.py?")
 
 
 if __name__ == "__main__":

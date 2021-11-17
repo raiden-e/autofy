@@ -28,10 +28,6 @@ def main(id: str, backup: str, base: str):
         except Exception:
             raise Exception("Could not sample lofibase or lofilist")
 
-    if playlist.edited_this_week(_spotify, id):
-        print("Exiting, Ran this week")
-        return
-
     print("getting playlist Backup")
     lofi_list = playlist.getAsync(_spotify, backup, True)["items"]
     print("getting playlist base")
@@ -61,9 +57,14 @@ def main(id: str, backup: str, base: str):
 
 if __name__ == '__main__':
     _spotify = get_spotify_client()
-    print("loading disabled tracks...")
+    print("loading gist")
     data = gist.load("autofy.json")
-    disabled = playlist.getAsync(_spotify, data['disabled'])["items"]
-    for x in (lofi, japan):
-        print(f'shuffeling {x["name"]}')
-        main(x['id'], x['backup'], x['base'])
+
+    if playlist.edited_this_week(_spotify, id):
+        print("Exiting, Ran this week")
+    else:
+        print("loading disabled tracks...")
+        disabled = playlist.getAsync(_spotify, data['disabled'])["items"]
+        for x in (lofi, japan):
+            print(f'shuffeling {x["name"]}')
+            main(x['id'], x['backup'], x['base'])

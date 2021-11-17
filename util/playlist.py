@@ -135,9 +135,9 @@ def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
         for artist_a, artist_b in zip(a['track']['artists'][1:], b["artists"][1:]):
             art_a += f", {artist_a['name']}"
             art_b += f", {artist_b}"
-        print("Duplicate Meta:")
-        print("{:>30}|{:>30}|{:>30}".format(a['track']['name'], art_a, a['track']['id']))
-        print("{:>30}|{:>30}|{:>30}".format(b['name'], art_b, b['id']))
+        print("  Duplicate Meta:")
+        print("    {:>30}|{:>30}|{:>30}".format(a['track']['name'], art_a, a['track']['id']))
+        print("    {:>30}|{:>30}|{:>30}".format(b['name'], art_b, b['id']))
 
     def track_to_seen(track):
         return {
@@ -150,7 +150,7 @@ def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
     def inner(xt):
         for y in seen_tracks:
             if xt["id"] == y["id"]:
-                print("Duplicate ID: {0:30}{1}".format(y['name'], f"{xt['id']}|{y['id']}"))
+                print("  Duplicate ID: {0:40}{1}".format(y['name'], f"{xt['id']}|{y['id']}"))
                 return False
 
         for y in seen_tracks:

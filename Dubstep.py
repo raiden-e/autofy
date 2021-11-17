@@ -9,7 +9,7 @@ except ImportError:
 from util import gist, playlist
 from util.spotify import get_spotify_client
 
-username = config.SPOTIPYUN
+username = config.SPOTIFY['NAME']
 dubstep_id = "6XnpwiV7hkEUMh4UsMapm2"
 _spotify = get_spotify_client()
 gist_name = "autofy.json"
