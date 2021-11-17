@@ -2,17 +2,12 @@
 import random
 import sys
 
-try:
-    import config
-except ImportError:
-    raise ImportError("Please make sure you rename config_template.py to config.py")
 from util import gist, playlist
 from util.spotify import get_spotify_client
 
-username = config.SPOTIFY['NAME']
 dubstep_id = "6XnpwiV7hkEUMh4UsMapm2"
-_spotify = get_spotify_client()
 gist_name = "autofy.json"
+_spotify = get_spotify_client()
 
 
 def get_newest_by_artist(artist):
@@ -25,9 +20,9 @@ def get_newest_by_artist(artist):
         print(e)
         return
 
-    def sorter(input):
-        return input['release_date']
-    artist_albums.sort(key=sorter, reverse=True)
+    def sorter_date(x):
+        return x['release_date']
+    artist_albums.sort(key=sorter_date, reverse=True)
     latest_release = artist_albums[0]
 
     if not latest_release["album_type"] == "album":
@@ -43,9 +38,9 @@ def get_newest_by_artist(artist):
         min(5, len(tracks))
     )
 
-    def sorter(input):
-        return input['popularity']
-    tracks.sort(key=sorter, reverse=True)
+    def sorter_pop(x):
+        return x['popularity']
+    tracks.sort(key=sorter_pop, reverse=True)
 
     return [tracks[first] for first in range(sample_amount)]
 

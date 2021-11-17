@@ -1,12 +1,8 @@
 import asyncio
 
 import aiohttp
+import config
 import discord
-
-try:
-    import config
-except ImportError:
-    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 api_url = "https://discordapp.com/api/webhooks"
 webhook_url = f"{api_url}/{config.DISCORD['NEWS_URL']}"

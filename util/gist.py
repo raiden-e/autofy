@@ -1,11 +1,7 @@
 import json
 
+import config
 from github import Github, InputFileContent
-
-try:
-    import config
-except ImportError:
-    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 gist_id = config.GIST['ID']
 token = config.GIST['TOKEN']

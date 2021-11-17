@@ -1,12 +1,8 @@
 import os
 from os.path import dirname
 
+import config
 import spotipy
-
-try:
-    import config
-except ImportError:
-    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 
 def get_spotify_client():
@@ -18,7 +14,7 @@ def get_spotify_client():
         )
         if not os.path.exists(cache_path):
             if config.SPOTIFY['CACHE']:
-                with open(cache_path, 'w') as f:
+                with open(cache_path, 'w', encoding='utf-8-sig') as f:
                     f.write(config.SPOTIFY['CACHE'])
             else:
                 raise Exception(
@@ -38,4 +34,4 @@ def get_spotify_client():
         )
         return _spotify
     except Exception as e:
-        raise Exception(f"ERROR Can't get token", e)
+        raise Exception("ERROR Can't get token", e)

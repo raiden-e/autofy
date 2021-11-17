@@ -1,5 +1,6 @@
 import concurrent.futures
 import math
+from time import strftime
 
 import spotipy
 
@@ -81,6 +82,20 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
                 tracks_to_add[(j*100):((j+1)*100)])
 
 
+def new_playlist(_spotify: spotipy.Spotify, tracks_to_add: list, name: str):
+    x = _spotify.user_playlist_create(
+        _spotify.me()['display_name'],
+        name,
+        description=f"Backup since {strftime('%d')} {strftime('%b')} {strftime('%Y')}"
+    )
+    if len(tracks_to_add) > 0:
+        if len(tracks_to_add) > 100:
+            addAsync(_spotify, tracks_to_add, x.id)
+            return x
+        add(_spotify, tracks_to_add, x.id)
+    return x
+
+
 def get_TaskCount(x, start_at_1=False) -> range:
     # Spotify's API wont allow more than 100 songs per POST:
     # https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/#body-parameters:~:text=A%20maximum%20of%20100
@@ -129,7 +144,7 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
     return True
 
 
-def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
+def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
     def print_diff(a, b):
         art_a, art_b = f"{a['track']['artists'][0]['name']}", f"{b['artists'][0]}"
         for artist_a, artist_b in zip(a['track']['artists'][1:], b["artists"][1:]):
@@ -162,7 +177,7 @@ def deduplify_list(main_list: list, base_list: list, disabled: list) -> list:
                             return False
         return True
 
-    seen_tracks = [track_to_seen(track['track']) for track in base_list + disabled]
+    seen_tracks = [track_to_seen(track['track']) for track in base_list + ignore]
 
     new_main = []
 

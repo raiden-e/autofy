@@ -59,7 +59,7 @@ async def message_sent_today():
         if datetime.datetime.now().date() <= lastMsg.date.date():
             print("Todays Track has alredy been sent")
             return True
-    except:
+    except Exception:
         print("Chat is empty, sending first daily track")
 
     return False
@@ -83,14 +83,9 @@ def get_random(tracks):
 
 
 def load_data():
-    dailysong_texts = os.path.join(
-        os.path.dirname(__file__), "util", "dailysong.json")
-    try:
-        with open(dailysong_texts, "r", encoding='utf-8-sig') as f:
-            return json.loads(f.read())
-    except(FileNotFoundError, FileExistsError) as e:
-        print(f"File not found!\n{e}")
-        return False
+    dailysong_texts = os.path.join(os.path.dirname(__file__), "util", "dailysong.json")
+    with open(dailysong_texts, "r", encoding='utf-8-sig') as f:
+        return json.loads(f.read())
 
 
 async def main():
@@ -100,8 +95,6 @@ async def main():
         return 0
 
     Data = load_data()
-    if not Data:
-        raise("Couldnt load Data, does dailysong.json exist?")
 
     print("Loading playlist...")
     tic = time.perf_counter()

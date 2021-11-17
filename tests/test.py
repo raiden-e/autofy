@@ -4,7 +4,7 @@ import unittest
 
 import DailySong
 import spotipy
-from telethon import TelegramClient, sync
+from telethon import TelegramClient #, sync
 from util import playlist
 from util.spotify import get_spotify_client
 from util.telegram import get_telegram_client
@@ -30,7 +30,6 @@ class unit_tests(unittest.TestCase):
         DateLike = float, datetime.datetime, datetime.date, datetime.timedelta
         self.assertIn(type(DailySong.get_twelve_pm()), DateLike)
         # self.assertAlmostEqual(DailySong.get_twelve_pm())
-
 
     def test_aTestingOff(self):
         self.assertFalse(DailySong.test)

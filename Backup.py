@@ -5,17 +5,17 @@ from util import dc, gist, playlist
 from util.spotify import get_spotify_client
 
 
-def print_exceptions(exceptions):
-    err_msg = f"Exceptions ({len(exceptions)}):\n" + pformat(exceptions)
+def print_exceptions(exepts):
+    err_msg = f"Exceptions ({len(exepts)}):\n" + pformat(exepts)
     print(err_msg)
-    if len(exceptions) > 0:
+    if len(exepts) > 0:
         try:
             asyncio.get_event_loop().run_until_complete(dc.error_log(err_msg))
         except Exception as e:
             print("DC broken?", e)
 
 
-def backup_playlist(pl: dict, disabled):
+def backup_playlist(pl: dict, ignore):
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
     print(f"  Exporting: {pl['set']}")
@@ -28,7 +28,7 @@ def backup_playlist(pl: dict, disabled):
         print(e)
         exceptions.append(e)
 
-    Tracks = playlist.deduplify_list(main_list=Get, base_list=Set, disabled=disabled)
+    Tracks = playlist.deduplify_list(main_list=Get, base_list=Set, ignore=ignore)
 
     if len(Tracks) > 0:
         ToAdd = [z['track']['uri'] for z in Tracks]
@@ -44,9 +44,9 @@ def backup_playlist(pl: dict, disabled):
 
 
 def main():
-    for playlist in data["backup"]:
-        print(f"Backing up: {playlist}")
-        backup_playlist(data["backup"][playlist], disabled)
+    for pl in data["backup"]:
+        print(f"Backing up: {pl}")
+        backup_playlist(data["backup"][pl], ignore)
 
     print_exceptions(exceptions)
     print("Done")
@@ -56,6 +56,6 @@ if __name__ == '__main__':
     _spotify = get_spotify_client()
     print("Loading autofy.json")
     data = gist.load("autofy.json")
-    disabled = playlist.getAsync(_spotify, data['disabled'])['items']
+    ignore = playlist.getAsync(_spotify, data['ignore'])['items']
     exceptions = []
     main()

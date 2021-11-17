@@ -1,4 +1,3 @@
-import ctypes.wintypes
 import os
 import time
 from io import BytesIO
@@ -9,6 +8,9 @@ import requests
 from PIL import Image
 
 from util.spotify import get_spotify_client
+
+if os.name == 'nt':
+    import ctypes.wintypes
 
 
 def get_docs_folder():
@@ -48,7 +50,7 @@ def main(repeat=True):
     while repeat:
         time.sleep(4)
         playback = _spotify.current_playback()
-        if not playback["is_playing"]:
+        if playback is None or not playback["is_playing"]:
             print("Playback stopped", end=None)
             continue
 
@@ -64,8 +66,8 @@ def main(repeat=True):
             'SpotifyNPTitle.txt': playback['item']['name'],
             'SpotifyNPartist.txt': playback['item']['artists'][0]['name'],
         }
-        for key in texts:
-            try_write(os.path.join(path, key), texts[key])
+        for key, value in texts.items():
+            try_write(os.path.join(path, key), value)
 
         folder = os.path.join(os.getenv('APPDATA'), 'slobs-client', 'Media')
         pics = [x for x in Path(folder).glob('*-SpotifyNP.jpg')]

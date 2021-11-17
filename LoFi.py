@@ -18,7 +18,7 @@ japan = {
 }
 
 
-def main(id: str, backup: str, base: str):
+def main(plid: str, backup: str, base: str):
     def randomize_tracks(lofi_base: list, lofi_list: list):
         try:
             list_size = 250 - 1  # We count -1 bc of initial track
@@ -34,7 +34,7 @@ def main(id: str, backup: str, base: str):
     lofi_base = playlist.get(_spotify, base, True)['items']
 
     print("deduplifying list")
-    lofi_list = playlist.deduplify_list(lofi_list, lofi_base, disabled)
+    lofi_list = playlist.deduplify_list(lofi_list, lofi_base, ignore)
 
     initial_track = random.choice(lofi_base)
     lofi_base.remove(initial_track)
@@ -45,13 +45,13 @@ def main(id: str, backup: str, base: str):
     print(weekly_playlistIds)
 
     print("clearing playlist")
-    playlist.clear(_spotify, id)
+    playlist.clear(_spotify, plid)
 
     print("adding songs to playlist")
     playlist.add(
         _spotify=_spotify,
         tracks_to_add=weekly_playlistIds,
-        playlistId=id
+        playlistId=plid
     )
 
 
@@ -59,12 +59,12 @@ if __name__ == '__main__':
     _spotify = get_spotify_client()
     print("loading gist")
     data = gist.load("autofy.json")
+    print("loading ignored tracks...")
+    ignore = playlist.getAsync(_spotify, data['ignore'])["items"]
 
-    if playlist.edited_this_week(_spotify, id):
-        print("Exiting, Ran this week")
-    else:
-        print("loading disabled tracks...")
-        disabled = playlist.getAsync(_spotify, data['disabled'])["items"]
-        for x in (lofi, japan):
-            print(f'shuffeling {x["name"]}')
-            main(x['id'], x['backup'], x['base'])
+    for x in (lofi, japan):
+        if playlist.edited_this_week(_spotify, lofi['id']):
+            print(f"Ran this week: {x['name']}")
+            continue
+        print(f'shuffeling {x["name"]}')
+        main(x['id'], x['backup'], x['base'])

@@ -3,18 +3,13 @@ import base64
 import collections
 import os
 import sys
-from time import strftime
 
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
+import config
 from util import gist, playlist
 from util.spotify import get_spotify_client
-
-try:
-    import config
-except ImportError:
-    raise ImportError("Please make sure you rename config_template.py to config.py")
 
 if len(sys.argv) > 3:
     raise TypeError(
@@ -59,7 +54,7 @@ def set_newPlaylist(inputPlaylist):
     try:
         playlists = gist.load(gist_name)
     except Exception:
-        raise "Could not receive playlist's. Are you offline?"
+        raise FileNotFoundError("Could not receive playlist's. Are you offline?")
 
     for pl in playlists['backup']:
         if inputPlaylist['uri'] in playlists['backup'][pl]['get'] \
@@ -72,18 +67,9 @@ def set_newPlaylist(inputPlaylist):
     else:
         playlist_Name = f"{inputPlaylist['name']}.backup"
 
-    try:
-        tracks = [x["track"]["uri"]
-                  for x in playlist.getAsync(sp, args.plid, True)['items']]
-    except Exception:
-        raise "Could not get Tracks from the playlist, aborting"
+    tracks = [x["track"]["uri"] for x in playlist.getAsync(sp, args.plid, True)['items']]
 
-    newPlaylist = sp.user_playlist_create(
-        config.SPOTIFY['NAME'],
-        playlist_Name,
-        public=True,
-        description=f"Backup since {strftime('%d')} {strftime('%b')} {strftime('%Y')}"
-    )
+    newPlaylist = playlist.new_playlist(sp, tracks, playlist_Name)
 
     with open("BackupImage.jpg", "rb") as pic:
         sp.playlist_upload_cover_image(
