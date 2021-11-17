@@ -15,7 +15,7 @@ def print_exceptions(exepts):
             print("DC broken?", e)
 
 
-def backup_playlist(pl: dict, ignore):
+def backup_playlist(pl: dict):
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
     print(f"  Exporting: {pl['set']}")
@@ -46,7 +46,7 @@ def backup_playlist(pl: dict, ignore):
 def main():
     for pl in data["backup"]:
         print(f"Backing up: {pl}")
-        backup_playlist(data["backup"][pl], ignore)
+        backup_playlist(data["backup"][pl])
 
     print_exceptions(exceptions)
     print("Done")

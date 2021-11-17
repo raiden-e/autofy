@@ -7,7 +7,6 @@ import sys
 import requests
 from PIL import Image, ImageDraw, ImageFont
 
-import config
 from util import gist, playlist
 from util.spotify import get_spotify_client
 

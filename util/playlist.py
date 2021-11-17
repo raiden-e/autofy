@@ -135,8 +135,7 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
     datetime_current = int(f"{d.year}{d.strftime('%W')}")
     datetime_lastEdit = int(f"{l.year}{l.strftime('%W')}")
 
-    print("Current Week:{:<0}\nLast edit:{:<0}".format(
-        datetime_current, datetime_lastEdit))
+    print(f"Current Week:{datetime_current:<0}\nLast edit:{datetime_lastEdit:<0}")
 
     if datetime_current > datetime_lastEdit:
         print("continuing")
@@ -151,8 +150,8 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
             art_a += f", {artist_a['name']}"
             art_b += f", {artist_b}"
         print("  Duplicate Meta:")
-        print("    {:>30}|{:>30}|{:>30}".format(a['track']['name'], art_a, a['track']['id']))
-        print("    {:>30}|{:>30}|{:>30}".format(b['name'], art_b, b['id']))
+        print(f"    {a['track']['name']:>30}|{art_a:>30}|{a['track']['id']:>30}")
+        print(f"    {b['name']:>30}|{art_b:>30}|{b['id']:>30}")
 
     def track_to_seen(track):
         return {
@@ -165,7 +164,7 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
     def inner(xt):
         for y in seen_tracks:
             if xt["id"] == y["id"]:
-                print("  Duplicate ID: {0:40}{1}".format(y['name'], f"{xt['id']}|{y['id']}"))
+                print(f"  Duplicate ID: {y['name']:40}{xt['id']}|{y['id']}")
                 return False
 
         for y in seen_tracks:
