@@ -151,8 +151,8 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
             art_a += f", {artist_a['name']}"
             art_b += f", {artist_b}"
         print("  Duplicate Meta:")
-        print(f"    {a['name']:>30}|{art_a:>30}|{a['id']:>30}")
-        print(f"    {b['name']:>30}|{art_b:>30}|{b['id']:>30}")
+        print(f"    {a['id']}  {a['name']}{' ':>30}| {art_a}")
+        print(f"    {b['id']}  {b['name']}{' ':>30}| {art_b}")
 
     def track_to_seen(track):
         return {
