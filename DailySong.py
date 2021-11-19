@@ -84,7 +84,7 @@ def get_random(tracks):
 
 def load_data():
     dailysong_texts = os.path.join(os.path.dirname(__file__), "util", "dailysong.json")
-    with open(dailysong_texts, "r") as f:
+    with open(dailysong_texts, "r", encoding='utf-8-sig') as f:
         return json.loads(f.read())
 
 
