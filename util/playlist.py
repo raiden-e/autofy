@@ -1,4 +1,5 @@
 import concurrent.futures
+import datetime
 import math
 from time import strftime
 
@@ -117,7 +118,6 @@ def clear(_spotify: spotipy.Spotify, playlistId: str):
 
 
 def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
-    import datetime
     try:
         lastEditStr = _spotify.playlist_tracks(playlist_id, limit=10)["items"]
         newest_track = lastEditStr[0]
@@ -146,12 +146,12 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
 
 def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
     def print_diff(a, b):
-        art_a, art_b = f"{a['track']['artists'][0]['name']}", f"{b['artists'][0]}"
-        for artist_a, artist_b in zip(a['track']['artists'][1:], b["artists"][1:]):
+        art_a, art_b = f"{a['artists'][0]['name']}", f"{b['artists'][0]}"
+        for artist_a, artist_b in zip(a['artists'][1:], b["artists"][1:]):
             art_a += f", {artist_a['name']}"
             art_b += f", {artist_b}"
         print("  Duplicate Meta:")
-        print(f"    {a['track']['name']:>30}|{art_a:>30}|{a['track']['id']:>30}")
+        print(f"    {a['name']:>30}|{art_a:>30}|{a['id']:>30}")
         print(f"    {b['name']:>30}|{art_b:>30}|{b['id']:>30}")
 
     def track_to_seen(track):
@@ -173,7 +173,7 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
                 if abs(y["duration"] - xt["duration_ms"]) <= 100:  # if duration somewhat same
                     for artist in xt["artists"]:
                         if artist['name'] in y["artists"]:
-                            print_diff(x, y)
+                            print_diff(xt, y)
                             return False
         return True
 

@@ -14,7 +14,7 @@ from util.spotify import get_spotify_client
 from util.telegram import get_telegram_client
 
 
-def get_twelve_pm(test=False):
+def get_twelve_pm():
     cest = pytz.timezone('Europe/Berlin')
 
     now = cest.localize(datetime.datetime.now())

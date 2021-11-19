@@ -1,6 +1,6 @@
-telethon
-spotipy
 discord.py
+Pillow
 pyGithub
 pytz
-Pillow
+spotipy
+telethon

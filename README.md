@@ -16,6 +16,7 @@ _Scripts that automatically backup, update Spotify playlists etc._
 [5]: https://github.com/LonamiWebs/Telethon/blob/master/LICENSE
 
 ## Links 📎
+
 | [Daily Song][6] | [Discord Daily Song][7] | [Dubstep Radar][8] | [LoFi Playlist][9] | [Track des Tages][10] | [Trappin in Japan][11] |
 | --------------- | ----------------------- | ------------------ | ------------------ | --------------------- | ---------------------- |
 
@@ -25,6 +26,7 @@ _Scripts that automatically backup, update Spotify playlists etc._
 [9]: https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA
 [10]: http://t.me/TrackDesTages
 [11]: https://open.spotify.com/playlist/6Cu6fL6djm63Em0i93IRUW
+
 ## Lofi ☕
 
 A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).
@@ -111,12 +113,12 @@ python Backup.py
 ### Requirements
 
 - `python`
-  - `spotipy`
-  - `telethon`
   - `discord.py`
+  - `Pillow`
   - `pyGithub`
   - `pytz`
-  - `Pillow`
+  - `spotipy`
+  - `telethon`
 
 Create a [Telegram application](https://my.telegram.org/)
 
@@ -136,7 +138,9 @@ Open Powershell/CMD/bash and run the following commands:
 ```powershell
 # if you are unfamiliar with virtual environments, you can read up on them here:
 # https://docs.python.org/3/tutorial/venv.html
-python -m venv venv
+pip install -U pip virtualenv
+
+python -m virtualenv venv
 
 ./venv/Scripts/activate.ps1
 
