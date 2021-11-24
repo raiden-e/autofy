@@ -17,8 +17,6 @@ def load(gist_name):
 def update(filename: str, content, description: str):
     if not isinstance(filename, str):
         raise ValueError("playlist_name has to be specified")
-    if not isinstance(content, str):
-        raise ValueError("input has to be specified")
 
     gist.edit(
         description=description,
