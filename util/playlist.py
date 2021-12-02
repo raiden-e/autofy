@@ -1,9 +1,11 @@
+import base64
 import concurrent.futures
 import datetime
 import math
 from time import strftime
 
 import spotipy
+from spotipy.exceptions import SpotifyException
 
 
 def get(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> dict:
@@ -83,17 +85,28 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
                 tracks_to_add[(j*100):((j+1)*100)])
 
 
-def new_playlist(_spotify: spotipy.Spotify, tracks_to_add: list, name: str):
+def new_playlist(_spotify: spotipy.Spotify, tracks_to_add: list, name: str, pic: str = None):
     x = _spotify.user_playlist_create(
         _spotify.me()['display_name'],
         name,
         description=f"Backup since {strftime('%d')} {strftime('%b')} {strftime('%Y')}"
     )
+
+    if pic is not None:
+        try:
+            with open(pic, "rb") as p:
+                _spotify.playlist_upload_cover_image(x["id"], base64.b64encode(p.read()))
+        except (FileExistsError, FileNotFoundError):
+            print(f"[WARNING]: Could not find picture: {pic}\n  Skipping image upload")
+        except SpotifyException as e:
+            print(
+                f"[WARNING]: Could not upload picture: {pic}\n  Skipping image upload\n  Trace:\n{e.with_traceback()}")
+
     if len(tracks_to_add) > 0:
         if len(tracks_to_add) > 100:
-            addAsync(_spotify, tracks_to_add, x.id)
+            addAsync(_spotify, tracks_to_add, x["id"])
             return x
-        add(_spotify, tracks_to_add, x.id)
+        add(_spotify, tracks_to_add, x["id"])
     return x
 
 
@@ -145,6 +158,14 @@ def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
 
 
 def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
+    def track_to_seen(track):
+        return {
+            "name": track['name'],
+            "artists": [artist['name'] for artist in track['artists']],
+            "duration": track['duration_ms'],
+            "id": track['id'],
+        }
+
     def print_diff(a, b):
         art_a, art_b = f"{a['artists'][0]['name']}", f"{b['artists'][0]}"
         for artist_a, artist_b in zip(a['artists'][1:], b["artists"][1:]):
@@ -153,14 +174,6 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
         print("  Duplicate Meta:")
         print(f"    {a['id']}  {a['name']}{' ':>30}| {art_a}")
         print(f"    {b['id']}  {b['name']}{' ':>30}| {art_b}")
-
-    def track_to_seen(track):
-        return {
-            "name": track['name'],
-            "artists": [artist['name'] for artist in track['artists']],
-            "duration": track['duration_ms'],
-            "id": track['id'],
-        }
 
     def inner(xt):
         for y in seen_tracks:
@@ -182,7 +195,7 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
     new_main = []
 
     for x in main_list:
-        xt = x['track']  # means x_track
+        xt = x['track']
         if inner(xt):
             new_main.append(x)
         seen_tracks.append(track_to_seen(xt))

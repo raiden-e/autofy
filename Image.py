@@ -1,5 +1,4 @@
 import argparse
-import base64
 import collections
 import os
 import sys
@@ -55,9 +54,10 @@ def set_newPlaylist(inputPlaylist):
     except Exception:
         raise FileNotFoundError("Could not receive playlist's. Are you offline?")
 
-    for pl in playlists['backup']:
-        if inputPlaylist['uri'] in playlists['backup'][pl]['get'] \
-                or inputPlaylist['uri'] == playlists['backup'][pl]['get']:
+    backup = playlists['backup']
+
+    for pl in backup:
+        if inputPlaylist['uri'] in backup[pl]['get'] or inputPlaylist['uri'] == backup[pl]['get']:
             print('Playlist already backed')
             return False
 
@@ -68,21 +68,11 @@ def set_newPlaylist(inputPlaylist):
 
     tracks = [x["track"]["uri"] for x in playlist.getAsync(sp, args.plid, True)['items']]
 
-    newPlaylist = playlist.new_playlist(sp, tracks, playlist_Name)
+    newPlaylist = playlist.new_playlist(sp, tracks, playlist_Name, img)
 
-    with open("BackupImage.jpg", "rb") as pic:
-        sp.playlist_upload_cover_image(
-            newPlaylist["id"], base64.b64encode(pic.read()))
+    backup[playlist_Name] = {"get": [inputPlaylist["uri"]], "set": newPlaylist["uri"]}
 
-    for j in playlist.get_TaskCount(len(tracks)):
-        sp.user_playlist_add_tracks(
-            sp.auth_manager.username, playlist_id=newPlaylist["id"], tracks=tracks[(j*100):((j+1)*100)])
-
-    playlists["playlist"][playlist_Name] = {
-        "get": [inputPlaylist["uri"]], "set": newPlaylist["uri"]}
-
-    playlists["playlist"] = collections.OrderedDict(
-        sorted(playlists['backup'].items()))
+    backup = collections.OrderedDict(sorted(backup.items()))
 
     comment = f"Add playlist: {playlist_Name} - ({inputPlaylist['uri']})"
     gist.update(gist_name, playlists, comment)
@@ -92,10 +82,10 @@ def set_newPlaylist(inputPlaylist):
 
 
 def main():
-    with open('BackupImage.jpg', 'wb') as p:
+    with open(img, 'wb') as p:
         with requests.get(sp.playlist_cover_image(args.plid)[0]["url"], allow_redirects=True) as r:
             p.write(r.content)
-    watermark_photo('BackupImage.jpg', output_image='BackupImage.jpg')
+    watermark_photo(img, output_image=img)
     if not args.noplaylist:
         print("getting backed playlists...")
         print("setting new playlist")
@@ -103,4 +93,5 @@ def main():
 
 
 if __name__ == '__main__':
+    img = 'BackupImage.jpg'
     main()
