@@ -1,6 +1,6 @@
 # Autofy
 
-<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests"/><img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" style="padding-left: 5px" />
+<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests"/> <img src="https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg" alt="Daily Run" style="padding-left: 5px" />
 
 _Scripts that automatically backup, update Spotify playlists etc._
 
@@ -75,6 +75,10 @@ This script continuously  saves the name of the song, artist, and album in a tex
 python .\NowPlayling.py
 ```
 
+## FixReport 🔧
+
+Since my playlist [Hard DNB 🔥](https://open.spotify.com/playlist/57VYcWAMIc97Ig41vPpev6) is being reported like _crazy_ and I always have to reset the title, description and reupload the playlist's cover image, i built a script, that would to it automa for me. Screw Spotify's support...
+
 ## Examples
 
 ### Example Lofi
@@ -138,7 +142,8 @@ Open Powershell/CMD/bash and run the following commands:
 ```powershell
 # if you are unfamiliar with virtual environments, you can read up on them here:
 # https://docs.python.org/3/tutorial/venv.html
-pip install -U pip virtualenv
+
+pip install -U virtualenv, pip
 
 python -m virtualenv venv
 

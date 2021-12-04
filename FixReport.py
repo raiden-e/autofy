@@ -10,11 +10,8 @@ playlist_id = '57VYcWAMIc97Ig41vPpev6'
 
 def main():
     x = _spotify.playlist(playlist_id)
-    reported = all((
-        x["name"] != "Hard DnB 🔥 Drum and Bass",
-        len(x["description"]) < 1
-    ))
-    if not reported:
+
+    if x["name"] == "Hard DnB 🔥 Drum and Bass" and len(x["description"]) > 0:
         print("Playlist ok")
         return
 
@@ -29,7 +26,7 @@ def main():
     if 'report_count' in backup:
         report_count = backup['report_count'] = int(backup['report_count']) + 1
 
-    description = f'"My playlist got reported like {report_count} times now, which is really wicked 🔥" -raiden_e'
+    description = f'Hey if you are the one with the report bot please stop.. it is kinda annoying. You reported this pl like {report_count} times now...'
 
     _spotify.playlist_change_details(
         playlist_id, name="Hard DnB 🔥 Drum and Bass", description=description)
