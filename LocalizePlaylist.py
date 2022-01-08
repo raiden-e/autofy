@@ -74,7 +74,6 @@ def main(pl) -> None:
 
     local_tracks = []
     for root, _, files in os.walk(folder):
-        # pprint.pp((root, dirs, files))
         print(root)
         for file in files:
             if file[-4:] in ('.mp3', '.m4a', 'flac', '.wav', '.ogg'):

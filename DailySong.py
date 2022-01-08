@@ -20,13 +20,13 @@ def get_twelve_pm():
     now = cest.localize(datetime.datetime.now())
     if now.hour >= 12 and not test:
         return datetime.timedelta(0)
-    else:
-        twelve_pm = datetime.datetime(
-            now.year, now.month, now.day, 12, tzinfo=cest)
-        print("now: " + str(now))
-        print("twelve pm: " + str(twelve_pm))
-        print("td: " + str(twelve_pm - now))
-        return twelve_pm - now - datetime.timedelta(minutes=7)
+
+    twelve_pm = datetime.datetime(
+        now.year, now.month, now.day, 12, tzinfo=cest)
+    print("now: " + str(now))
+    print("twelve pm: " + str(twelve_pm))
+    print("td: " + str(twelve_pm - now))
+    return twelve_pm - now - datetime.timedelta(minutes=7)
 
 
 def get_todays_tracks(Data):

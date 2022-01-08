@@ -1,6 +1,8 @@
 import os
 from os.path import dirname
 
+import spotipy
+
 if __name__ == '__main__':
     import sys
     pth = os.path
@@ -9,7 +11,6 @@ if __name__ == '__main__':
     sys.path = pth
 else:
     import config
-import spotipy
 
 
 def get_cache_path() -> str:
@@ -18,18 +19,17 @@ def get_cache_path() -> str:
         'util',
         'spotify.cache'
     )
-    # if not os.path.exists(cache_path):
-    #     if config.SPOTIFY['CACHE'] is None:
-    #         raise Exception(
-    #             "Please make sure that you get a spotipy cache string and place it into config.py")
-    #     with open(cache_path, 'w', encoding='utf-8') as f:
-    #         f.write(config.SPOTIFY['CACHE'])
+    if not os.path.exists(cache_path):
+        if not config.SPOTIFY['CACHE'] or config.SPOTIFY['CACHE'].isspace():
+            print("Please make sure that you get a spotipy cache string and place it into config.py")
+
+        with open(cache_path, 'w', encoding='utf-8') as f:
+            f.write(config.SPOTIFY['CACHE'])
     return cache_path
 
 
 def get_spotify_client() -> spotipy.Spotify:
     try:
-        # print(f"{cache_path} EXISTS: {os.path.exists(cache_path)}")
         _spotify = spotipy.Spotify(
             auth_manager=spotipy.oauth2.SpotifyOAuth(
                 username=config.SPOTIFY['NAME'],
@@ -47,8 +47,6 @@ def get_spotify_client() -> spotipy.Spotify:
 
 
 def get_new_token():
-    # _sp = get_spotify_client()
-    oauth = spotipy.oauth2.SpotifyOAuth
     spotipy.util.prompt_for_user_token(
         username=config.SPOTIFY['NAME'],
         scope=config.SPOTIFY['SCOPE'],
