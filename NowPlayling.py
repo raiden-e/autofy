@@ -70,7 +70,7 @@ def main(repeat=True):
             try_write(os.path.join(path, key), value)
 
         folder = os.path.join(os.getenv('APPDATA'), 'slobs-client', 'Media')
-        pics = [x for x in Path(folder).glob('*-SpotifyNP.jpg')]
+        pics = list(Path(folder).glob('*-SpotifyNP.jpg'))
         snp_pic = "SpotifyNP.jpg" if len(pics) == 0 else pics[0]
 
         get_np_pic(

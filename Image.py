@@ -61,10 +61,9 @@ def set_newPlaylist(inputPlaylist):
             print('Playlist already backed')
             return False
 
+    playlist_Name = f"{inputPlaylist['name']}.backup"
     if inputPlaylist["name"] == "Discover Weekly":
-        playlist_Name = f"{inputPlaylist['name']}.backup [{inputPlaylist['id']}]"
-    else:
-        playlist_Name = f"{inputPlaylist['name']}.backup"
+        playlist_Name += f" [{inputPlaylist['id']}]"
 
     tracks = [x["track"]["uri"] for x in playlist.getAsync(sp, args.plid, True)['items']]
 

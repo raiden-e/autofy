@@ -21,3 +21,7 @@ DCGUILD = ""      # guild id of your server
 # foreach ($char in $chars) { $a = ($a -replace "\$char", "\$char") }
 # $a = ($a -replace "\s*#.*(\n|$)", "`n" -replace "\n{2,}", "`n")
 # $a | Out-File config2.py -Encoding utf8
+
+
+# Also, if to insert spotify.cache to config.py: spotify['CACHE']
+# (Get-Content .\util\spotify.cache) -replace '"', '\"'

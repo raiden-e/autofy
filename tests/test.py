@@ -4,17 +4,18 @@ import unittest
 
 import DailySong
 import spotipy
-from telethon import TelegramClient #, sync
+from telethon import TelegramClient  # , sync # only needed when testing _telegram._authorized
 from util import playlist
 from util.spotify import get_spotify_client
 from util.telegram import get_telegram_client
 
 
 class unit_tests(unittest.TestCase):
+    """
+    Test some functionality
+    """
     def test_telegramClient(self):
-
         _telegram = get_telegram_client()
-
         self.assertIsInstance(_telegram, TelegramClient)
         self.assertIsNotNone(_telegram.api_hash)
         self.assertIsNotNone(_telegram.api_id)

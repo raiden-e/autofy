@@ -2,6 +2,7 @@ import base64
 import concurrent.futures
 import datetime
 import math
+import re
 from time import strftime
 
 import spotipy
@@ -201,3 +202,16 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
         seen_tracks.append(track_to_seen(xt))
 
     return new_main
+
+
+def verify_url(url: str):
+    if not isinstance(url, str):
+        raise AttributeError("Parameter is not of type str")
+    url = url.strip()
+    if re.match(r'^[a-zA-Z0-9]{22}$', url):
+        return True
+    if re.match(r'^(https?:\/\/){0,1}open\.spotify\.com\/playlist\/[a-zA-Z0-9]{22}', url):
+        return True
+    if re.match(r'^spotify:playlist:([a-zA-Z0-9]{22})$', url):
+        return True
+    return False

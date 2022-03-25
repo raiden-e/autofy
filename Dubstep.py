@@ -18,7 +18,7 @@ def get_newest_by_artist(artist):
     except Exception as e:
         print(f"Could not get latest album for {artist}")
         print(e)
-        return
+        return False
 
     def sorter_date(x):
         return x['release_date']
@@ -27,7 +27,7 @@ def get_newest_by_artist(artist):
 
     if not latest_release["album_type"] == "album":
         tracks = _spotify.album_tracks(latest_release['uri'])
-        tmp = [track for track in tracks['items']]
+        tmp = list(tracks['items'])
         return tmp
 
     tracks = _spotify.tracks([x['id'] for x in _spotify.album_tracks(
@@ -91,6 +91,7 @@ def new_artist(artist: str):
     gist_list['dubstep'] = dub_list
     print(f"added {artist['name']}")
     gist.update(gist_name, gist_list, f"Add artist: {artist['id']} ({artist['name']})")
+    return True
 
 
 if __name__ == '__main__':
