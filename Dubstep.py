@@ -5,7 +5,7 @@ import sys
 from util import gist, playlist
 from util.spotify import get_spotify_client
 
-dubstep_id = "6XnpwiV7hkEUMh4UsMapm2"
+dubstep_id = "7lKB7kFwjFjFz2fEGZm82X"
 gist_name = "autofy.json"
 _spotify = get_spotify_client()
 
