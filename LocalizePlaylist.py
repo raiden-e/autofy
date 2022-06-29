@@ -2,7 +2,7 @@ import time
 import json
 import os
 import re
-import sys
+import argparse
 from os.path import join as ojoin
 
 import config
@@ -16,7 +16,7 @@ test = False
 def main(pl) -> None:
     escapes = [re.compile(r'([\.\^\$+])'),
                re.compile(r"[\"\'(\├\»)\(\)\[\]\-\&\:]"),
-               re.compile(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}"),]
+               re.compile(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}"), ]
 
     def escape(inp: str):
         inp = re.sub(escapes[0], r"\\\1", inp)
@@ -91,6 +91,8 @@ def main(pl) -> None:
                     if not track['found'] and re.findall(track['reMatch'], file, re.IGNORECASE):
                         track['found'] = True
                         local_tracks.append([ojoin(f"{root}\\{file}"), track['track']])
+                        print(
+                            f"Found: {track['track']['artists'][0]['name']} - {track['track']['name']}")
                         break
 
     lost_tracks = []
@@ -106,30 +108,30 @@ def main(pl) -> None:
     print(lost_text)
     print(lost_urls)
 
-    export(local_tracks)
+    if not lost and len(local_tracks) > 0:
+        export(local_tracks)
 
     if test:
         print("Test sessison, skipping lost tracks")
         return
     if len(lost_tracks) > 1:
-        playlist.clear(_sp, config.LOSTTRACKS)
+        playlist.clear(_sp, config.SPOTIFY['LOSTTRACKS'])
         time.sleep(1)
-        playlist.addAsync(_sp, lost_tracks, config.LOSTTRACKS)
+        playlist.addAsync(_sp, lost_tracks, config.SPOTIFY['LOSTTRACKS'])
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print("usage: LocalizePlaylist.py <music folder> <spotify link>")
-        sys.exit()
-    else:
-        playlist_id = sys.argv[2]
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--playlistid')
+    parser.add_argument('-f', '--folder')
+    parser.add_argument('-l', dest='lost', action='store_true')
+    args = parser.parse_args()
+
+    playlist_id = args.playlistid
+    folder = args.folder
+    lost = args.lost
+
     if not playlist.verify_url(playlist_id):
         raise AttributeError("Please enter a valid url")
-
-    if len(sys.argv) > 1:
-        folder = sys.argv[1]
-    else:
-        print("WARNING: Using <os.curdir> as folder")
-        folder = os.curdir
 
     main(playlist_id)
