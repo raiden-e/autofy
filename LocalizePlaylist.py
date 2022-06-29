@@ -14,14 +14,13 @@ test = False
 
 
 def main(pl) -> None:
-    escapes = [re.compile(r'([\.\^\$+])'),
-               re.compile(r"[\"\'(\├\»)\(\)\[\]\-\&\:]"),
-               re.compile(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}"), ]
-
     def escape(inp: str):
-        inp = re.sub(escapes[0], r"\\\1", inp)
-        inp = re.sub(escapes[1], r".?", inp)
-        inp = re.sub(escapes[2], r"\\s*", inp)
+        # escape .^$ with "\""
+        inp = re.sub(r'([\.\^\$+])', r"\\\1", inp)
+        # replace '"├\»()[]-&: with .? (0 or 1 of anything)
+        inp = re.sub(r"[\"\'(\├\»)\(\)\[\]\-\&\:\/]", r".?", inp)
+        # \s*, \s+ 2 or more with single \s*
+        inp = re.sub(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}", r"\\s*", inp)
         return inp
 
     def export(pl):
@@ -39,6 +38,7 @@ def main(pl) -> None:
             playlist_re = r"([^\wäöüÄÖÜß\ \.,!\#§%\&\(\)\{\}\[\]\-_\+])|(^\s+)|(\s+$)"
             playlist_name = re.sub(playlist_re, "", playlist_details['name'])
             playlist_name = re.sub(r"\s{2,}", " ", playlist_name)
+            playlist_name.rstrip()
 
             if playlist_name == "":
                 playlist_name = "new_playlist"
@@ -73,11 +73,6 @@ def main(pl) -> None:
         re_match += r".?\s*-\s*.?"
         re_track_name = escape(tr['name'])
         # minus = '-'
-        V_I_P = re.search(r"\s*[-\(\[\{]?\s*VIP\s*[\)\]\}]?", tr['name'])
-        # V - I - P!
-        if V_I_P:
-            VIP_match = tr['name'][0:V_I_P.span()[0]] + tr['name'][V_I_P.span()[1]:]
-            re_track_name = "|".join((re_track_name, escape(VIP_match)))
 
         track['reMatch'] = f"{re_match}({re_track_name}).?"
         track['found'] = False
