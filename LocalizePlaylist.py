@@ -102,6 +102,7 @@ def main(pl) -> None:
     print("\nList of lost tracks:")
     print(lost_text)
     print(lost_urls)
+    print(f"\nLost: {len(lost_tracks)} / {len(tracks)}")
 
     if not lost and len(local_tracks) > 0:
         export(local_tracks)
