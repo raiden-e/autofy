@@ -15,15 +15,9 @@ if len(sys.argv) > 3:
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "plid",
-    nargs='?',
-    help='The id of the playlist you want to backup',
-    type=str)
-parser.add_argument(
-    "--noplaylist",
-    help='switch to only get picture',
-    action="store_true")
+parser.add_argument("plid", nargs='?', help='The id of the playlist you want to backup', type=str)
+parser.add_argument("--noplaylist", help='switch to only get picture', action="store_true")
+parser.add_argument('-f', '--file')
 args = parser.parse_args()
 
 gist_name = "autofy.json"
@@ -65,7 +59,7 @@ def set_newPlaylist(inputPlaylist):
     if inputPlaylist["name"] == "Discover Weekly":
         playlist_Name += f" [{inputPlaylist['id']}]"
 
-    tracks = [x["track"]["uri"] for x in playlist.getAsync(sp, args.plid, True)['items']]
+    tracks = [x["track"]["uri"] for x in playlist.getAsync(sp, inputPlaylist['id'], True)['items']]
 
     newPlaylist = playlist.new_playlist(sp, tracks, playlist_Name, img)
 
@@ -80,15 +74,37 @@ def set_newPlaylist(inputPlaylist):
     return newPlaylist["id"]
 
 
-def main():
+def image_playlist(plid):
     with open(img, 'wb') as p:
-        with requests.get(sp.playlist_cover_image(args.plid)[0]["url"], allow_redirects=True) as r:
+        with requests.get(sp.playlist_cover_image(plid)[0]["url"], allow_redirects=True) as r:
             p.write(r.content)
     watermark_photo(img, output_image=img)
-    if not args.noplaylist:
-        print("getting backed playlists...")
-        print("setting new playlist")
-        set_newPlaylist(sp.playlist(args.plid))
+
+    if args.noplaylist:
+        return
+
+    print("getting backed playlists...")
+    print("setting new playlist")
+    set_newPlaylist(sp.playlist(plid))
+
+
+def main():
+    if args.plid and args.file:
+        print("Please only specify a file OR a playlist")
+        return
+
+    if args.file:
+        with open(args.file, 'r', encoding='utf-8-sig') as f:
+            plids = f.readlines()
+        for plid in plids:
+            bruh = plid.strip()
+            print(f"Loading: {bruh}")
+            if playlist.verify_url(bruh):
+                image_playlist(bruh)
+            else:
+                print(f"Invalid URL: {bruh}")
+    else:
+        image_playlist(args.plid)
 
 
 if __name__ == '__main__':

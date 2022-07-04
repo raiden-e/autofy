@@ -88,7 +88,7 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
 
 def new_playlist(_spotify: spotipy.Spotify, tracks_to_add: list, name: str, pic: str = None):
     x = _spotify.user_playlist_create(
-        _spotify.me()['display_name'],
+        _spotify.me()['id'],
         name,
         description=f"Backup since {strftime('%d')} {strftime('%b')} {strftime('%Y')}"
     )
@@ -101,7 +101,7 @@ def new_playlist(_spotify: spotipy.Spotify, tracks_to_add: list, name: str, pic:
             print(f"[WARNING]: Could not find picture: {pic}\n  Skipping image upload")
         except SpotifyException as e:
             print(
-                f"[WARNING]: Could not upload picture: {pic}\n  Skipping image upload\n  Trace:\n{e.with_traceback()}")
+                f"[WARNING]: Could not upload picture: {pic}\n  Skipping image upload\n  Trace:\n{e.with_traceback(None)}")
 
     if len(tracks_to_add) > 0:
         if len(tracks_to_add) > 100:

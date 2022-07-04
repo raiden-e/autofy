@@ -45,6 +45,9 @@ def backup_playlist(pl: dict):
 
 def main():
     for pl in data["backup"]:
+        if data["backup"][pl]['set'].strip() == "":
+            print(f"Empty set: {pl}")
+            continue
         print(f"Backing up: {pl}")
         backup_playlist(data["backup"][pl])
 

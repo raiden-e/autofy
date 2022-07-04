@@ -6,15 +6,15 @@ from util.spotify import get_spotify_client
 
 lofi = {
     "name": "lofi",
-    "id": "5h9LqGUUE4FKQfVwgAu1OA",
-    "backup": "31k9ZXIfUi9v5mpbfg6FQH",
-    "base": "5adSO5spsp0tb48t2MyoD6",
+    "id": "6BjUHlMg8Qkb6VktjzBdac",
+    "backup": "0wd5N98lZyiNpOm4nQJqc5",
+    "base": "0itii8CWNFCSyyae6Nyh82",
 }
 japan = {
     "name": "japan",
-    "id": "6Cu6fL6djm63Em0i93IRUW",
-    "backup": "19yEs2hB6J5FwHrGMsIlZQ",
-    "base": "7EdczIpYSY7aUBSMqgGguV",
+    "id": "0DBoAeAcD19yxfm3VkG3K9",
+    "backup": "0M9SjFcNecW4XlDUSHTIRA",
+    "base": "2qs5yzdS5o2imiHbbxZM01",
 }
 
 
@@ -64,8 +64,8 @@ if __name__ == '__main__':
 
     for x in (lofi, japan):
         print(f"Current playlist: {x['name']}")
-        if playlist.edited_this_week(_spotify, lofi['id']):
-            print(f"Ran this week: {x['name']}")
-            continue
+        # if playlist.edited_this_week(_spotify, lofi['id']):
+        #     print(f"Ran this week: {x['name']}")
+        #     continue
         print('shuffeling...')
         main(x['id'], x['backup'], x['base'])

@@ -22,14 +22,14 @@ _Scripts that automatically backup, update Spotify playlists etc._
 
 [6]: http://t.me/Daily_Track
 [7]: https://discord.gg/wDaVDtx
-[8]: https://open.spotify.com/playlist/6XnpwiV7hkEUMh4UsMapm2
-[9]: https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA
+[8]: https://open.spotify.com/playlist/7lKB7kFwjFjFz2fEGZm82X
+[9]: https://open.spotify.com/playlist/6BjUHlMg8Qkb6VktjzBdac
 [10]: http://t.me/TrackDesTages
-[11]: https://open.spotify.com/playlist/6Cu6fL6djm63Em0i93IRUW
+[11]: https://open.spotify.com/playlist/0DBoAeAcD19yxfm3VkG3K9
 
 ## Lofi ☕
 
-A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist](https://open.spotify.com/playlist/5h9LqGUUE4FKQfVwgAu1OA).
+A script to pick around 250 Lo-Fi songs and drop them into a chilled weekly automated [playlist][9].
 
 Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me study, code, play games, and relax.
 

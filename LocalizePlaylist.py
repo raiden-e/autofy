@@ -23,6 +23,10 @@ def main(pl) -> None:
         inp = re.sub(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}", r"\\s*", inp)
         return inp
 
+    def escape_title(inp: str):
+        inp = re.sub(r"(\s?-\s?)?\(?Original Mix\)?", r"", inp)
+        return escape(inp)
+
     def export(pl):
         output = "#EXTM3U\n"
         for tr in pl:
@@ -68,10 +72,9 @@ def main(pl) -> None:
         tr = track['track']
         re_artists = [escape(artist['name']) for artist in tr['artists']]
         re_match = f".?({'|'.join(re_artists)})+"
-
         # add a "-" symbol
         re_match += r".?\s*-\s*.?"
-        re_track_name = escape(tr['name'])
+        re_track_name = escape_title(tr['name'])
         # minus = '-'
 
         track['reMatch'] = f"{re_match}({re_track_name}).?"
@@ -108,7 +111,7 @@ def main(pl) -> None:
         export(local_tracks)
 
     if test:
-        print("Test sessison, skipping lost tracks")
+        print("Test sessison, skipping lost tracks playlist")
         return
     if len(lost_tracks) > 1:
         playlist.clear(_sp, config.SPOTIFY['LOSTTRACKS'])
