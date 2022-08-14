@@ -38,16 +38,70 @@ Lo-Fi Hip-Hop is some of the chilliest beats you will ever hear, and it helps me
 Spotify has some good playlists. However, they update them sometimes, such that they remove good songs from them.
 This script goes through several playlists and archives their tracks.
 
-Check out the [Night Rider Playlist](https://open.spotify.com/playlist/37i9dQZF1DX6GJXiuZRisr) and the [Night Rider Backup](https://open.spotify.com/playlist/5p0qHPgujEMFGSRms689v8).
+Check out the [Night Rider Playlist](https://open.spotify.com/playlist/37i9dQZF1DX6GJXiuZRisr) and the [Night Rider Backup](https://open.spotify.com/playlist/01aaWE3KEYkUEG6cPNc9Dg).
 
 ### Requirements for Backup
 
-You need to go to [gist.github.com](https://gist.github.com) and create a gist with a file called `autofy.json`
+You need to go to [gist.github.com](https://gist.github.com) and create a gist with a file called `autofy.json`. In this gist, create a file called `autofy.json` and paste the following basic structure
+
+```json
+{
+  "backup": {
+  }
+}
+```
+
+Adding single playlist automatically with Image.py: [Image](#image)
+
+
+
+Adding a playlist manually:
+
+```json
+{
+  "backup": {
+    "My Playlist No. 1": {
+      "get": [
+        "spotify:playlist:RanDoMstuff12312312312"
+      ],
+      "set": "spotify:playlist:uriToMyPlaylistNo1backup"
+    }
+  }
+}
+```
+
+you can also have multiple plyalist be merged into one backup list, like my [lofi backup](https://open.spotify.com/playlist/0wd5N98lZyiNpOm4nQJqc5):
+
+```json
+{
+  "backup": {
+    "zzLofi": {
+      "get": [
+        "spotify:playlist:0vvXsWCC9xrXsKd4FyS8kM",
+        "spotify:playlist:74sUjcvpGfdOvCHvgzNEDO",
+        "spotify:playlist:37i9dQZF1DXc8kgYqQLMfH",
+        "spotify:playlist:37i9dQZF1DX8Uebhn9wzrS",
+        "spotify:playlist:37i9dQZF1DX9RwfGbeGQwP",
+        "spotify:playlist:37i9dQZF1DWZZbwlv3Vmtr",
+        "spotify:playlist:37i9dQZF1DX0SM0LYsmbMT"
+      ],
+      "set": "spotify:playlist:0wd5N98lZyiNpOm4nQJqc5"
+    }
+  }
+}
+```
 
 ### Image
 
 Automatically adds a playlist to the gist containing Backup.py 's list of URI's.
 
+```powershell
+.\venv\Scripts\activate.ps1
+python .\Image.py --plid <link to playlist> --file <path to >
+```
+parser.add_argument("plid", nargs='?', help='The id of the playlist you want to backup', type=str)
+parser.add_argument("--noplaylist", help='switch to only get picture', action="store_true")
+parser.add_argument('-f', '--file')
 ## DailySong 🎶
 
 Send's a random song from a Spotify playlist to

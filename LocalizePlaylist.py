@@ -13,57 +13,53 @@ test = False
 # test = True
 
 
-def main(pl) -> None:
-    def escape(inp: str):
-        # escape .^$ with "\""
-        inp = re.sub(r'([\.\^\$+])', r"\\\1", inp)
-        # replace '"├\»()[]-&: with .? (0 or 1 of anything)
-        inp = re.sub(r"[\"\'(\├\»)\(\)\[\]\-\&\:\/]", r".?", inp)
-        # \s*, \s+ 2 or more with single \s*
-        inp = re.sub(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}", r"\\s*", inp)
-        return inp
+def export(pl):
+    output = "#EXTM3U\n"
+    for tr in pl:
+        output += f"#EXTINF:{int(tr[1]['duration_ms']/1000)}, {tr[1]['artists'][0]['name']} - {tr[1]['name']}\n"
+        output += "." + str(tr[0]).replace(folder, "") + "\n"
 
-    def escape_title(inp: str):
-        inp = re.sub(r"(\s?-\s?)?\(?Original Mix\)?", r"", inp)
-        return escape(inp)
+    with open(ojoin(folder, get_playlist_name()), 'w', encoding='utf-8') as f:
+        f.write(output)
 
-    def export(pl):
-        output = "#EXTM3U\n"
-        for tr in pl:
-            output += f"#EXTINF:{int(tr[1]['duration_ms']/1000)}, {tr[1]['artists'][0]['name']} - {tr[1]['name']}\n"
-            output += "." + str(tr[0]).replace(folder, "") + "\n"
 
-        with open(ojoin(folder, get_playlist_name()), 'w', encoding='utf-8') as f:
-            f.write(output)
+def get_playlist_name():
+    if _sp:
+        playlist_details = _sp.playlist(playlist_id)
+        playlist_re = r"([^\wäöüÄÖÜß\ \.,!\#§%\&\(\)\{\}\[\]\-_\+])|(^\s+)|(\s+$)"
+        playlist_name = re.sub(playlist_re, "", playlist_details['name'])
+        playlist_name = re.sub(r"\s{2,}", " ", playlist_name)
+        playlist_name.rstrip()
 
-    def get_playlist_name():
-        if _sp:
-            playlist_details = _sp.playlist(pl)
-            playlist_re = r"([^\wäöüÄÖÜß\ \.,!\#§%\&\(\)\{\}\[\]\-_\+])|(^\s+)|(\s+$)"
-            playlist_name = re.sub(playlist_re, "", playlist_details['name'])
-            playlist_name = re.sub(r"\s{2,}", " ", playlist_name)
-            playlist_name.rstrip()
-
-            if playlist_name == "":
-                playlist_name = "new_playlist"
-        else:
-            playlist_name = "0_test_new_playlist"
-
-        if os.path.exists(ojoin(folder, f"{playlist_name}.m3u8")):
-            i = 0
-            while os.path.exists(ojoin(folder, f"{playlist_name}_{i}.m3u8")):
-                i += 1
-            playlist_name = f"{playlist_name}_{i}"
-        return f"{playlist_name}.m3u8"
-
-    if test:
-        _sp = False
-        with open('response.json', mode='r', encoding='utf-8') as f:
-            data = json.load(f)
+        if playlist_name == "":
+            playlist_name = "new_playlist"
     else:
-        _sp = get_spotify_client()
-        data = playlist.getAsync(_sp, pl, publicOnly=True)
+        playlist_name = "0_test_new_playlist"
 
+    if os.path.exists(ojoin(folder, f"{playlist_name}.m3u8")):
+        i = 0
+        while os.path.exists(ojoin(folder, f"{playlist_name}_{i}.m3u8")):
+            i += 1
+        playlist_name = f"{playlist_name}_{i}"
+    return f"{playlist_name}.m3u8"
+
+
+def escape(inp: str):
+    # escape .^$ with "\""
+    inp = re.sub(r'([\.\^\$+])', r"\\\1", inp)
+    # replace '"├\»()[]-&: with .? (0 or 1 of anything)
+    inp = re.sub(r"[\"\'(\├\»)\(\)\[\]\-\&\:\/]", r".?", inp)
+    # \s*, \s+ 2 or more with single \s*
+    inp = re.sub(r"(\\s\*?){2,}|\s+|(\\s(\*|\+)?){2,}", r"\\s*", inp)
+    return inp
+
+
+def escape_title(inp: str):
+    inp = re.sub(r"(\s?-\s?)?\(?Original.?Mix\)?", r"", inp)
+    return escape(inp)
+
+
+def main() -> None:
     tracks = data['items']
 
     # preprocessing
@@ -124,6 +120,8 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--playlistid')
     parser.add_argument('-f', '--folder')
     parser.add_argument('-l', dest='lost', action='store_true')
+    parser.add_argument('-s', dest='single', action='store_true')
+    parser.add_argument('-t', dest='test', action='store_true')
     args = parser.parse_args()
 
     playlist_id = args.playlistid
@@ -133,4 +131,12 @@ if __name__ == '__main__':
     if not playlist.verify_url(playlist_id):
         raise AttributeError("Please enter a valid url")
 
-    main(playlist_id)
+    if test:
+        _sp = False
+        with open('response.json', mode='r', encoding='utf-8') as f:
+            data = json.load(f)
+    else:
+        _sp = get_spotify_client()
+        data = playlist.getAsync(_sp, playlist_id, publicOnly=True)
+
+    main()

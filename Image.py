@@ -21,6 +21,7 @@ parser.add_argument('-f', '--file')
 args = parser.parse_args()
 
 gist_name = "autofy.json"
+img = 'BackupImage.jpg'
 
 sp = get_spotify_client()
 
@@ -108,5 +109,4 @@ def main():
 
 
 if __name__ == '__main__':
-    img = 'BackupImage.jpg'
     main()
