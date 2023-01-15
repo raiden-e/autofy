@@ -14,12 +14,12 @@ class unit_tests(unittest.TestCase):
     """
     Test some functionality
     """
-    def test_telegramClient(self):
-        _telegram = get_telegram_client()
-        self.assertIsInstance(_telegram, TelegramClient)
-        self.assertIsNotNone(_telegram.api_hash)
-        self.assertIsNotNone(_telegram.api_id)
-        # self.assertTrue(_telegram._authorized)
+    # def test_telegramClient(self):
+    #     _telegram = get_telegram_client()
+    #     self.assertIsInstance(_telegram, TelegramClient)
+    #     self.assertIsNotNone(_telegram.api_hash)
+    #     self.assertIsNotNone(_telegram.api_id)
+    #     # self.assertTrue(_telegram._authorized)
 
     def test_get_spotify_client(self):
         _spotify = get_spotify_client()

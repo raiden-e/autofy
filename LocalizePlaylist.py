@@ -92,7 +92,7 @@ def escape_title(inp: str):
 def localize_tracks(tracks):
     music_extensions = tuple(['.mp3', '.m4a', '.flac', '.wav', '.ogg'])
     for root, _, files in os.walk(folder):
-        print(root)
+        print('\r' + root, end='')
         for file in files:
             if file.endswith(music_extensions):
                 insert_track(tracks, root, file)
@@ -147,12 +147,15 @@ if __name__ == '__main__':
     folder = args.folder
     lost = args.lost
 
+    _sp = get_spotify_client()
     if args.test:
+        try:
+            with open('response.json', mode='r', encoding='utf-8') as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            data = playlist.getAsync(_sp, playlist_id, publicOnly=True)
         _sp = False
-        with open('response.json', mode='r', encoding='utf-8') as f:
-            data = json.load(f)
     else:
-        _sp = get_spotify_client()
         data = playlist.getAsync(_sp, playlist_id, publicOnly=True)
 
     main()
