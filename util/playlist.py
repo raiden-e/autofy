@@ -65,7 +65,7 @@ def add(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
     if not tracks_to_add:
         raise Exception("tracks_to_add has to be parsed!")
 
-    for j in get_TaskCount(len(tracks_to_add)):
+    for j in get_TaskCount(len(tracks_to_add), item_amount=100):
         _spotify.playlist_add_items(
             playlist_id=playlistId,
             items=tracks_to_add[(j*100):((j+1)*100)]
