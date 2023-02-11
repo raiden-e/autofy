@@ -4,6 +4,7 @@ from pprint import pformat, pprint
 from util import dc, gist, playlist
 from util.spotify import get_spotify_client
 
+msg = ""
 
 def print_exceptions(exepts):
     err_msg = f"Exceptions ({len(exepts)}):\n" + pformat(exepts)
@@ -36,6 +37,9 @@ def backup_playlist(pl: dict):
             playlist.addAsync(_spotify, ToAdd, pl['set'])
             print(f"Added: {len(ToAdd)}")
             pprint(ToAdd, depth=2)
+            msg = "get:\n  " + "\n  ".join([x for x in pl["get"]])
+            msg += "\nset\n  " + pl["set"]
+            print(f"Backed:\n{msg}")
         except Exception as e:
             print(e)
             exceptions.append(e)
@@ -48,7 +52,9 @@ def main():
         if data["backup"][pl]['set'].strip() == "":
             print(f"Empty set: {pl}")
             continue
-        print(f"Backing up: {pl}")
+        msg = pl + "\nget:\n  " + "\n  ".join([x for x in data["backup"][pl]["get"]])
+        msg += "\nset:\n  " + data["backup"][pl]["set"]
+        print(f"Backing up: {msg}")
         backup_playlist(data["backup"][pl])
 
     print_exceptions(exceptions)
