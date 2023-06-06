@@ -133,6 +133,8 @@ python .\NowPlayling.py
 
 Since my playlist [Hard DNB 🔥](https://open.spotify.com/playlist/57VYcWAMIc97Ig41vPpev6) is being reported like _crazy_ and I always have to reset the title, description and reupload the playlist's cover image, i built a script, that would to it automa for me. Screw Spotify's support...
 
+update: my playlist got deleted along with my account. I love spotify :)
+
 ## Examples
 
 ### Example Lofi
