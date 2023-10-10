@@ -20,9 +20,7 @@ def get_newest_by_artist(artist):
         print(e)
         return False
 
-    def sorter_date(x):
-        return x['release_date']
-    artist_albums.sort(key=sorter_date, reverse=True)
+    artist_albums.sort(key=lambda x: x['release_date'], reverse=True)
     latest_release = artist_albums[0]
 
     if not latest_release["album_type"] == "album":
@@ -38,9 +36,7 @@ def get_newest_by_artist(artist):
         min(5, len(tracks))
     )
 
-    def sorter_pop(x):
-        return x['popularity']
-    tracks.sort(key=sorter_pop, reverse=True)
+    tracks.sort(key=lambda x: x['popularity'], reverse=True)
 
     return [tracks[first] for first in range(sample_amount)]
 
