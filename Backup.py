@@ -1,7 +1,8 @@
 import asyncio
 from pprint import pformat, pprint
 
-from util import dc, gist, playlist
+# removed imprort dc because it was causing an error
+from util import gist, playlist
 from util.spotify import get_spotify_client
 
 msg = ""
