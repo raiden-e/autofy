@@ -8,13 +8,13 @@ from util.spotify import get_spotify_client
 msg = ""
 
 def print_exceptions(exepts):
-    err_msg = f"Exceptions ({len(exepts)}):\n" + pformat(exepts)
-    print(err_msg)
-    if len(exepts) > 0:
-        try:
-            asyncio.get_event_loop().run_until_complete(dc.error_log(err_msg))
-        except Exception as e:
-            print("DC broken?", e)
+    print(f"Exceptions ({len(exepts)}):\n" + pformat(exepts))
+    # removed imprort dc because it was causing an error
+    # if len(exepts) > 0:
+    #     try:
+    #         asyncio.get_event_loop().run_until_complete(dc.error_log(err_msg))
+    #     except Exception as e:
+    #         print("DC broken?", e)
 
 
 def backup_playlist(pl: dict):
