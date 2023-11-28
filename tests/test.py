@@ -2,7 +2,7 @@ import datetime
 import time
 import unittest
 
-import DailySong
+# import DailySong
 import spotipy
 # from telethon import TelegramClient  # , sync # only needed when testing _telegram._authorized
 from util import playlist
