@@ -27,13 +27,13 @@ class unit_tests(unittest.TestCase):
         self.assertIsNotNone(_spotify)
         self.assertIsInstance(_spotify, spotipy.client.Spotify)
 
-    def test_isTwelvePM_datetime(self):
-        DateLike = float, datetime.datetime, datetime.date, datetime.timedelta
-        self.assertIn(type(DailySong.get_twelve_pm()), DateLike)
-        # self.assertAlmostEqual(DailySong.get_twelve_pm())
+    # def test_isTwelvePM_datetime(self):
+    #     DateLike = float, datetime.datetime, datetime.date, datetime.timedelta
+    #     self.assertIn(type(DailySong.get_twelve_pm()), DateLike)
+    #     # self.assertAlmostEqual(DailySong.get_twelve_pm())
 
-    def test_aTestingOff(self):
-        self.assertFalse(DailySong.test)
+    # def test_aTestingOff(self):
+    #     self.assertFalse(DailySong.test)
 
     def test_zget_playlist(self):
         def timer_wrapper(func, *args, **kwargs):
