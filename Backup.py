@@ -5,14 +5,15 @@ from util.spotify import get_spotify_client
 
 msg = ""
 
+
 def print_exceptions(exepts):
     print(f"Exceptions ({len(exepts)}):\n" + pformat(exepts))
+
 
 def backup_playlist(pl: dict):
     Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
     print(f"  Exporting: {pl['set']}")
-
 
     try:
         Get = [track for track in Get if track['track']]

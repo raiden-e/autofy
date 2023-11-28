@@ -111,7 +111,7 @@ def new_playlist(_spotify: spotipy.Spotify, tracks_to_add: list, name: str, pic:
     return x
 
 
-def get_TaskCount(x, start_at_1=False, item_amount = 50) -> range:
+def get_TaskCount(x, start_at_1=False, item_amount=50) -> range:
     # Spotify's API wont allow more than 100 songs per POST:
     # https://developer.spotify.com/documentation/web-api/reference/playlists/add-tracks-to-playlist/#body-parameters:~:text=A%20maximum%20of%20100
 
