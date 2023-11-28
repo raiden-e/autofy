@@ -1,6 +1,6 @@
 # Autofy
 
-<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests"/> <img src="[https://github.com/raiden-e/autofy/workflows/Daily%20Run/badge.svg](https://github.com/raiden-e/autofy/actions/workflows/DailyRun.yml/badge.svg)" alt="Daily Run" style="padding-left: 5px" />
+<img src="https://github.com/raiden-e/autofy/workflows/Tests/badge.svg" alt="Tests"/> <img src="https://github.com/raiden-e/autofy/actions/workflows/DailyRun.yml/badge.svg" alt="Daily Run" style="padding-left: 5px" />
 
 _Scripts that automatically backup, update Spotify playlists etc._
 
