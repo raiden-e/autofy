@@ -35,7 +35,7 @@ def main() -> None:
         export(local_tracks)
 
     if test:
-        print("Test sessison, skipping lost tracks playlist")
+        print("Test session, skipping lost tracks playlist")
         return
     if len(lost_tracks) > 1:
         playlist.clear(_sp, config.SPOTIFY['LOSTTRACKS'])
@@ -57,8 +57,8 @@ def get_playlist_name():
     if _sp:
         playlist_details = _sp.playlist(playlist_id)
         playlist_re = r"([^\wäöüÄÖÜß\ \.,!\#§%\&\(\)\{\}\[\]\-_\+])|(^\s+)|(\s+$)"
-        playlist_name = re.sub(playlist_re, "", playlist_details['name'])
-        playlist_name = re.sub(r"\s{2,}", " ", playlist_name)
+        playlist_name = re.sub(playlist_re, "", playlist_details['name'], re.IGNORECASE)
+        playlist_name = re.sub(r"\s{2,}", " ", playlist_name, re.IGNORECASE)
         playlist_name.rstrip()
 
         if playlist_name == "":
@@ -77,15 +77,33 @@ def get_playlist_name():
 def escape(inp: str):
     # escape .^$ with "\""
     inp = re.sub(r'([\.\^\$+])', r"\\\1", inp)
-    # replace '"├\»()[]-&: with .? (0 or 1 of anything)
-    inp = re.sub(r"[\"\'(?:\├\»)\(\)\[\]\-\&\:\/]", r".?", inp)
+
+    # replace Ø∆├\»()[]-&: with .? (0 or 1 of anything)
+    inp = re.sub(r"[\[\]\(\)Ø∆├»\-:']", r".*", inp, re.IGNORECASE)
+    inp = re.sub("&", r".*", inp, re.IGNORECASE)
     # \s*, \s+ 2 or more with single \s*
-    inp = re.sub(r"(?:\\s\*?){2,}|\s+|(?:\\s(?:\*|\+)?){2,}", r"\\s*", inp)
+    inp = re.sub(r"(?:\\s\*?){2,}|\s+|(?:\\s(?:\*|\+)?){2,}", r"\\s*", inp, re.IGNORECASE)
     return inp
 
 
 def escape_title(inp: str):
-    inp = re.sub(r"(?:\s?-\s?)?\(?:?Original.?(?:Mix|Version)\)?", r"", inp)
+    # Krl Mx - Holy Gucci (Clair Remix) -> Krl.*Mx.*Holy.*Gucci.*Clair.*Remix.*
+    inp = re.sub(r"\(?(?:(?:feat|with|ft)\.?)+\s*\)?", "", inp, re.IGNORECASE)
+    # remove " - (Deluxe, Radio, Original) (Edition, Edit, Mix, Version)"
+    inp = re.sub(r"(?:\s*-\s*)?\(?:?(?:Deluxe|Radio|Original).?(?:Edition|Edit|Mix|Version)\)?", "", inp, re.IGNORECASE)
+    # remove slowed, "bass boosted"
+    inp = re.sub(r"slowed\s+(?:\+|and|&)*reverb(?:ed)?", r"", inp, re.IGNORECASE)
+    forbiddenPhases = (
+        "Re-?Recorded",
+        "Remastered",
+        r"Bass\s*Boosted",
+        "Official",
+        "Extended"
+    )
+    for phase in forbiddenPhases:
+        inp = re.sub(phase, r"", inp, re.IGNORECASE)
+    inp = re.sub(r"\s", r"\\s*", inp, re.IGNORECASE)
+    inp = re.sub(r"(?:\\s(?:\*|\+|\?)?){2,}", r"\\s*", inp, re.IGNORECASE)
     return escape(inp)
 
 
@@ -105,16 +123,11 @@ def preprocess(tracks):
         if track['is_local']:
             remove.append(track)
             continue
-        # match at least one artist
-        tr = track['track']
-        re_artists = [escape(artist['name']) for artist in tr['artists']]
-        re_match = f".?(?:{'|'.join(re_artists)})+"
-        # add a "-" symbol
-        re_match += r".?\s*-\s*.?"
-        re_track_name = escape_title(tr['name'])
-        # minus = '-'
 
-        track['reMatch'] = f"{re_match}({re_track_name}).?"
+
+        tr = track['track']
+        track['reMatch'] = escape_title(tr['name'])
+        track['artistsRe'] = r"(?:" + "|".join([re.escape(x["name"]) for x in tr['artists']]) + r")"
         track['found'] = False
     for track in remove:
         tracks.remove(track)
@@ -122,11 +135,13 @@ def preprocess(tracks):
 
 def insert_track(tracks, root, file):
     for track in tracks:
-        if not track['found'] and re.findall(track['reMatch'], file, re.IGNORECASE):
-            track['found'] = join_path(f"{root}\\{file}")
-            print(
-                f"Found: {track['track']['artists'][0]['name']} - {track['track']['name']}")
-            return
+        if not track['found']:
+            if re.search(track['reMatch'], file, re.IGNORECASE):
+                if re.search(track['artistsRe'], file, re.IGNORECASE):
+                    track['found'] = join_path(root, file)
+                    print(
+                        f"Found: {track['track']['artists'][0]['name']} - {track['track']['name']} | {file.replace(folder, '')}")
+                    return
 
 
 if __name__ == '__main__':
