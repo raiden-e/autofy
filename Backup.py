@@ -41,8 +41,9 @@ def backup_playlist(pl: dict):
 
 
 def main():
+    print("loading...")
     for pl in data["backup"]:
-        if data["backup"][pl]['set'].strip() == "":
+        if data["backup"][pl]["set"].strip() == "":
             print(f"Empty set: {pl}")
             continue
         msg = pl + "\nget:\n  " + "\n  ".join([x for x in data["backup"][pl]["get"]])
@@ -54,10 +55,13 @@ def main():
     print("Done")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _spotify = get_spotify_client()
-    print("Loading autofy.json")
+    print("Loading autofy.json...")
     data = gist.load("autofy.json")
-    ignore = playlist.getAsync(_spotify, data['ignore'])['items']
+    print("Loading autofy.json completed.")
+    print("Loading Loading ignore list...")
+    ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
+    print("Loading ignore list completed.")
     exceptions = []
     main()
