@@ -14,7 +14,7 @@ GISTID = ""       # https://github.com/settings/tokens
 DCTOKEN = ""      # A discord token to login to ur bot
 DCGUILD = ""      # guild id of your server
 
-# A small powershell script to escap when using GitHub actions
+# A small powershell script to escape when using GitHub actions
 #
 # $a = Get-Content config.py -Raw -Encoding utf8
 # $chars = ("\", '"', "(", ")")
