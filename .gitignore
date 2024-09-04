@@ -8,6 +8,7 @@ logs/
 spotify.cache
 images.py
 config.py
+config2.py
 .DS_Store
 
 # Byte-compiled / optimized / DLL files

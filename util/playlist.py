@@ -127,10 +127,13 @@ def clear(_spotify: spotipy.Spotify, playlistId: str):
             tracks.append(x["track"]["uri"])
 
     for i in get_TaskCount(len(tracks)):
-        _spotify.playlist_remove_all_occurrences_of_items(
-            playlist_id=playlistId,
-            items=tracks[(i*100):((i+1)*100)]
-        )
+        if(len(tracks[(i*100):((i+1)*100)]) > 0):
+            _spotify.playlist_remove_all_occurrences_of_items(
+                playlist_id=playlistId,
+                items=tracks[(i*100):((i+1)*100)]
+            )
+        else:
+            print("WARNING: Empty list.")
 
 
 def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:
