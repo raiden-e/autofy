@@ -184,7 +184,7 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
     def inner(xt):
         for y in seen_tracks:
             if xt["id"] == y["id"]:
-                print(f"  Duplicate ID: {y['name']:40}{xt['id']}|{y['id']}")
+                # print(f"  Duplicate ID: {y['name']:40}{xt['id']}|{y['id']}")
                 return False
 
         for y in seen_tracks:
@@ -192,7 +192,7 @@ def deduplify_list(main_list: list, base_list: list, ignore: list) -> list:
                 if abs(y["duration"] - xt["duration_ms"]) <= 100:  # if duration somewhat same
                     for artist in xt["artists"]:
                         if artist['name'] in y["artists"]:
-                            print_diff(xt, y)
+                            # print_diff(xt, y)
                             return False
         return True
 
