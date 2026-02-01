@@ -24,14 +24,14 @@ def main(plid: str, backup: str, base: str):
             list_size = 250 - 1  # We count -1 bc of initial track
             list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
             final_sample = random.sample(lofi_base + list_sample, list_size)
-            return [x['track']['uri'] for x in [initial_track, *final_sample]]
+            return [x["track"]["uri"] for x in [initial_track, *final_sample]]
         except Exception:
             raise Exception("Could not sample lofibase or lofilist")
 
     print("getting playlist Backup")
     lofi_list = playlist.getAsync(_spotify, backup, True)["items"]
     print("getting playlist base")
-    lofi_base = playlist.get(_spotify, base, True)['items']
+    lofi_base = playlist.get(_spotify, base, True)["items"]
 
     print("deduplifying list")
     lofi_list = playlist.deduplify_list(lofi_list, lofi_base, ignore)
@@ -42,25 +42,21 @@ def main(plid: str, backup: str, base: str):
 
     print("randomizing")
     weekly_playlistIds = randomize_tracks(lofi_base, lofi_list)
-    print(weekly_playlistIds)
+    print(f"Generated {len(weekly_playlistIds)} tracks to add (should be 250)")
 
-    print("clearing playlist")
+    print(f"clearing playlist {plid}")
     playlist.clear(_spotify, plid)
 
     print("adding songs to playlist")
-    playlist.add(
-        _spotify=_spotify,
-        tracks_to_add=weekly_playlistIds,
-        playlistId=plid
-    )
+    playlist.add(_spotify=_spotify, tracks_to_add=weekly_playlistIds, playlistId=plid)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     _spotify = get_spotify_client()
     print("loading gist")
     data = gist.load("autofy.json")
     print("loading ignored tracks...")
-    ignore = playlist.getAsync(_spotify, data['ignore'])["items"]
+    ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
 
     for x in (lofi, japan):
         print(f"Current playlist: {x['name']}")

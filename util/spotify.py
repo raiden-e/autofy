@@ -1,7 +1,9 @@
 import os
+import time
 from os.path import dirname
 
 import spotipy
+from spotipy.exceptions import SpotifyException
 
 if __name__ == '__main__':
     import sys
@@ -28,7 +30,7 @@ def get_cache_path() -> str:
     return cache_path
 
 
-def get_spotify_client() -> spotipy.Spotify:
+def get_spotify_client(retries=3, backoff_factor=1) -> spotipy.Spotify:
     try:
         _spotify = spotipy.Spotify(
             auth_manager=spotipy.oauth2.SpotifyOAuth(
@@ -39,7 +41,9 @@ def get_spotify_client() -> spotipy.Spotify:
                 redirect_uri=config.SPOTIFY['REDIRECT'],
                 cache_path=get_cache_path(),
                 requests_timeout=10
-            )
+            ),
+            retries=retries,
+            backoff_factor=backoff_factor
         )
         return _spotify
     except Exception as e:

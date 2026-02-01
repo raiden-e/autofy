@@ -3,6 +3,7 @@ import concurrent.futures
 import datetime
 import math
 import re
+import time
 from time import strftime
 
 import spotipy
@@ -31,8 +32,14 @@ def getAsync(_spotify: spotipy.Spotify, playlistId: str, publicOnly=False) -> di
     offsets = [i * 100 for i in get_TaskCount(result['total'], True)]
     exec_results = []
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        for offset in offsets:
+    # Use a smaller number of workers to avoid rate limiting
+    max_workers = min(5, len(offsets))
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for i, offset in enumerate(offsets):
+            # Add a small delay between submissions to avoid rate limiting
+            if i > 0:
+                time.sleep(0.1)
             exec_results.append(
                 executor.submit(
                     _spotify.playlist_tracks,
@@ -78,8 +85,14 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
     if not tracks_to_add:
         raise Exception("tracks_to_add has to be parsed!")
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        for j in get_TaskCount(len(tracks_to_add)):
+    tasks = list(get_TaskCount(len(tracks_to_add)))
+    max_workers = min(5, len(tasks))
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for i, j in enumerate(tasks):
+            # Add a small delay between submissions to avoid rate limiting
+            if i > 0:
+                time.sleep(0.1)
             executor.submit(
                 _spotify.playlist_add_items,
                 playlistId,
