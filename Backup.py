@@ -3,15 +3,26 @@ from pprint import pformat, pprint
 from util import gist, playlist
 from util.spotify import get_spotify_client
 
-msg = ""
-
 
 def print_exceptions(exepts):
     print(f"Exceptions ({len(exepts)}):\n" + pformat(exepts))
 
 
 def backup_playlist(pl: dict):
-    Get = [playlist.getAsync(_spotify, x, publicOnly=True)["items"] for x in pl["get"]][0]
+    # Merge all source playlists into one list
+    Get = []
+    for playlist_id in pl["get"]:
+        try:
+            items = playlist.getAsync(_spotify, playlist_id, publicOnly=True)["items"]
+            Get.extend(items)
+        except Exception as e:
+            print(f"  Error fetching playlist {playlist_id}: {e}")
+            exceptions.append(e)
+    
+    if not Get:
+        print(f"  No tracks found in source playlists")
+        return
+    
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
     print(f"  Exporting: {pl['set']}")
 
@@ -43,6 +54,14 @@ def backup_playlist(pl: dict):
 def main():
     print("loading...")
     for pl in data["backup"]:
+        for gid in data["backup"][pl]["get"]:
+            if not playlist.verify_url(gid):
+                print(f'\033[93mPlaylist {gid} aint legit. imma remove it\033[0m')
+                data["backup"][pl]["get"].remove(gid)
+            if len(data["backup"][pl]["get"]) == 0:
+                print(f"\033[91mAyo there aint no valid 'get' playlists for {pl}, wth man get rid of this shit!...\033[0m")
+                continue
+
         if data["backup"][pl]["set"].strip() == "":
             print(f"Empty set: {pl}")
             continue
