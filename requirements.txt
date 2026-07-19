@@ -1,5 +1,6 @@
 # discord.py
 # telethon
+mutagen
 Pillow
 pyGithub
 pytz

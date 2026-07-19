@@ -1,0 +1,11 @@
+config.py
+config2.py
+__pycache__/
+*.py[cod]
+*.session
+*.session-journal
+.env
+.venv
+.DS_Store
+tests/
+tests.py

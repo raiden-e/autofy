@@ -74,7 +74,7 @@ def addAsync(_spotify: spotipy.Spotify, tracks_to_add: list, playlistId: str):
     if not tracks_to_add:
         raise Exception("tracks_to_add has to be parsed!")
 
-    tasks = list(get_TaskCount(len(tracks_to_add)))
+    tasks = list(get_TaskCount(len(tracks_to_add), item_amount=100))
     max_workers = min(5, len(tasks))
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -124,13 +124,10 @@ def clear(_spotify: spotipy.Spotify, playlistId: str):
         if not x["is_local"]:
             tracks.append(x["track"]["uri"])
 
-    for i in get_TaskCount(len(tracks)):
-        if len(tracks[(i * 100) : ((i + 1) * 100)]) > 0:
-            _spotify.playlist_remove_all_occurrences_of_items(
-                playlist_id=playlistId, items=tracks[(i * 100) : ((i + 1) * 100)]
-            )
-        else:
-            print("WARNING: Empty list.")
+    for i in get_TaskCount(len(tracks), item_amount=100):
+        _spotify.playlist_remove_all_occurrences_of_items(
+            playlist_id=playlistId, items=tracks[(i * 100) : ((i + 1) * 100)]
+        )
 
 
 def edited_this_week(_spotify: spotipy.Spotify, playlist_id: str) -> bool:

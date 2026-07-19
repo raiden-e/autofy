@@ -53,8 +53,6 @@ You need to go to [gist.github.com](https://gist.github.com) and create a gist w
 
 Adding single playlist automatically with Image.py: [Image](#image)
 
-
-
 Adding a playlist manually:
 
 ```json
@@ -99,9 +97,7 @@ Automatically adds a playlist to the gist containing Backup.py 's list of URI's.
 .\venv\Scripts\activate.ps1
 python .\Image.py --plid <link to playlist> --file <path to >
 ```
-parser.add_argument("plid", nargs='?', help='The id of the playlist you want to backup', type=str)
-parser.add_argument("--noplaylist", help='switch to only get picture', action="store_true")
-parser.add_argument('-f', '--file')
+
 ## DailySong 🎶
 
 Send's a random song from a Spotify playlist to
@@ -134,6 +130,11 @@ python .\NowPlayling.py
 Since my playlist [Hard DNB 🔥](https://open.spotify.com/playlist/57VYcWAMIc97Ig41vPpev6) is being reported like _crazy_ and I always have to reset the title, description and reupload the playlist's cover image, i built a script, that would to it automa for me. Screw Spotify's support...
 
 update: my playlist got deleted along with my account. I love spotify :)
+
+### In Memory
+
+- Hard DNB: <https://open.spotify.com/playlist/57VYcWAMIc97Ig41vPpev6>
+- High at work: <https://web.archive.org/web/20230307220643/https://open.spotify.com/playlist/6ZUqG9zEynTVKBsgbvVikr>
 
 ## Examples
 

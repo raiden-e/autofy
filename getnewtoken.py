@@ -8,6 +8,11 @@ During the run you'll be prompted to remove the existing cache file
 (`./util/spotify.cache`). After confirming, a browser window opens for the
 Spotify auth flow. Once you accept, the cache file will be rewritten with a
 fresh refresh token.
+
+python FlattenFolder.py ~/media/music/DNB\ Hard                      # dry run
+python FlattenFolder.py ~/media/music/DNB\ Hard --apply              # actually move
+python FlattenFolder.py ~/media/music/DNB\ Hard --apply --all        # also move .nfo, art, etc.
+python FlattenFolder.py ~/media/music/DNB\ Hard --apply --keep-dirs  # leave empty dirs behind
 """
 from __future__ import annotations
 

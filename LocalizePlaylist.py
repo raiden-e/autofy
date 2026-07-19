@@ -4,6 +4,7 @@ import os
 import re
 import string
 import argparse
+import unicodedata
 from os.path import join as join_path
 
 import config
@@ -49,10 +50,10 @@ def main() -> None:
     if test:
         print("Test session, skipping lost tracks playlist")
         return
-    # if len(lost_tracks) > 1:
-    #     playlist.clear(_sp, config.SPOTIFY["LOSTTRACKS"])
-    #     time.sleep(1)
-    #     playlist.addAsync(_sp, lost_tracks, config.SPOTIFY["LOSTTRACKS"])
+    if len(lost_tracks) > 1:
+        playlist.clear(_sp, config.SPOTIFY["LOSTTRACKS"])
+        time.sleep(1)
+        playlist.addAsync(_sp, lost_tracks, config.SPOTIFY["LOSTTRACKS"])
 
 
 def export(pl):
@@ -71,7 +72,6 @@ def get_playlist_name():
         playlist_re = r"([^\wäöüÄÖÜß\ \.,!\#§%\&\(\)\{\}\[\]\-_\+])|(^\s+)|(\s+$)"
         playlist_name = re.sub(playlist_re, "", playlist_details["name"], flags=re.IGNORECASE)
         playlist_name = re.sub(r"\s{2,}", " ", playlist_name, flags=re.IGNORECASE)
-        playlist_name.rstrip()
 
         if playlist_name == "":
             playlist_name = "new_playlist"
@@ -87,18 +87,17 @@ def get_playlist_name():
 
 
 def normalize_string(s):
-    # Convert to lowercase and remove punctuation
-    s = s.lower()
+    s = unicodedata.normalize("NFKD", s.lower())
+    s = "".join(c for c in s if not unicodedata.combining(c))
     for p in string.punctuation:
         s = s.replace(p, " ")
 
-    # Remove common extra words that usually appear in titles but not filenames
     words = s.split()
-    banned = [
+    banned = {
         "feat", "ft", "with", "deluxe", "radio", "original", "edition", "edit",
         "mix", "version", "remastered", "official", "extended",
-    ]
-    return set([w for w in words if w not in banned])
+    }
+    return {w for w in words if w not in banned}
 
 
 def localize_tracks(tracks):
@@ -125,18 +124,19 @@ def preprocess(tracks):
 
 
 def insert_track(tracks, root, file):
-    file_norm = set(normalize_string(file))
+    file_norm = normalize_string(file)
 
     for track in tracks:
-        if not track["found"]:
-            title_words = track["search_title"]
-            artist_words = track["search_artists"][0]  # Check first artist mainly
+        if track["found"]:
+            continue
+        if not track["search_title"].issubset(file_norm):
+            continue
+        if not any(a.issubset(file_norm) for a in track["search_artists"]):
+            continue
 
-            # Check if all title words and all primary artist words are present in the filename
-            if title_words.issubset(file_norm) and artist_words.issubset(file_norm):
-                track["found"] = join_path(root, file)
-                print(f"Found: {track['track']['artists'][0]['name']} - {track['track']['name']} | {file.replace(folder, '')}")
-                return
+        track["found"] = join_path(root, file)
+        print(f"Found: {track['track']['artists'][0]['name']} - {track['track']['name']} | {file.replace(folder, '')}")
+        return
 
 
 if __name__ == "__main__":
