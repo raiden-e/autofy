@@ -1,5 +1,6 @@
 # discord.py
 # telethon
+json5
 mutagen
 Pillow
 pyGithub
