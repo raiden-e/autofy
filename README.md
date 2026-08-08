@@ -140,31 +140,31 @@ update: my playlist got deleted along with my account. I love spotify :)
 
 ### Example Lofi
 
-```powershell
+```bash
 python LoFi.py
 ```
 
 ### Example Image
 
-```powershell
+```bash
 python Image.py spotify:playlist:5h9LqGUUE4FKQfVwgAu1OA
 ```
 
 ### Example DailySong
 
-```powershell
+```bash
 python DailySong.py
 ```
 
 ### Example Dubstep
 
-```powershell
+```bash
 python Dubstep.py
 ```
 
 ### Example Backup
 
-```powershell
+```bash
 # requires a gist with a file called "autofy.json" see above
 python Backup.py
 ```
@@ -196,7 +196,7 @@ Install [Python](https://www.python.org/downloads)
 
 Open Powershell/CMD/bash and run the following commands:
 
-```powershell
+```bash
 # if you are unfamiliar with virtual environments, you can read up on them here:
 # https://docs.python.org/3/tutorial/venv.html
 
@@ -211,7 +211,7 @@ pip install -r requirements.txt
 
 Now you can run a script manually like so:
 
-```powershell
+```bash
 # 'xxxxxxxxxx' is the playlist id
 python Image.py spotify:playlist:xxxxxxxxxx
 ```

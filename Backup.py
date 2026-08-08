@@ -54,13 +54,15 @@ def backup_playlist(pl: dict):
 def main():
     print("loading...")
     for pl in data["backup"]:
-        for gid in data["backup"][pl]["get"]:
+        get_list = data["backup"][pl]["get"]
+        for gid in list(get_list):
             if not playlist.verify_url(gid):
                 print(f'\033[93mPlaylist {gid} aint legit. imma remove it\033[0m')
-                data["backup"][pl]["get"].remove(gid)
-            if len(data["backup"][pl]["get"]) == 0:
-                print(f"\033[91mAyo there aint no valid 'get' playlists for {pl}, wth man get rid of this shit!...\033[0m")
-                continue
+                get_list.remove(gid)
+
+        if len(get_list) == 0:
+            print(f"\033[91mAyo there aint no valid 'get' playlists for {pl}, wth man get rid of this shit!...\033[0m")
+            continue
 
         if data["backup"][pl]["set"].strip() == "":
             print(f"Empty set: {pl}")
