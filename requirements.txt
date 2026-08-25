@@ -2,6 +2,7 @@
 # telethon
 json5
 mutagen
+python-dotenv
 Pillow
 pyGithub
 pytz

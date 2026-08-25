@@ -1,5 +1,8 @@
 #!/usr/env/python3
 import random
+import sys
+
+from spotipy.exceptions import SpotifyOauthError
 
 from util import gist, playlist
 from util.spotify import get_spotify_client
@@ -20,13 +23,17 @@ japan = {
 
 def main(plid: str, backup: str, base: str):
     def randomize_tracks(lofi_base: list, lofi_list: list):
-        try:
-            list_size = 250 - 1  # We count -1 bc of initial track
-            list_sample = random.sample(lofi_list, (list_size - len(lofi_base)))
-            final_sample = random.sample(lofi_base + list_sample, list_size)
-            return [x["track"]["uri"] for x in [initial_track, *final_sample]]
-        except Exception:
-            raise Exception("Could not sample lofibase or lofilist")
+        list_size = 250 - 1  # We count -1 bc of initial track
+        needed = list_size - len(lofi_base)
+        if needed > len(lofi_list):
+            raise ValueError(
+                f"Not enough tracks: need {needed} from backup but only "
+                f"{len(lofi_list)} available (base has {len(lofi_base)})"
+            )
+
+        list_sample = random.sample(lofi_list, needed)
+        final_sample = random.sample(lofi_base + list_sample, list_size)
+        return [x["track"]["uri"] for x in [initial_track, *final_sample]]
 
     print("getting playlist Backup")
     lofi_list = playlist.getAsync(_spotify, backup, True)["items"]
@@ -52,16 +59,26 @@ def main(plid: str, backup: str, base: str):
 
 
 if __name__ == "__main__":
-    _spotify = get_spotify_client()
-    print("loading gist")
-    data = gist.load("autofy.json")
-    print("loading ignored tracks...")
-    ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
+    try:
+        _spotify = get_spotify_client()
+        print("loading gist")
+        data = gist.load("autofy.json")
+        print("loading ignored tracks...")
+        ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
 
-    for x in (lofi, japan):
-        print(f"Current playlist: {x['name']}")
-        if playlist.edited_this_week(_spotify, lofi['id']):
-            print(f"Ran this week: {x['name']}")
-            continue
-        print('shuffeling...')
-        main(x['id'], x['backup'], x['base'])
+        for x in (lofi, japan):
+            print(f"Current playlist: {x['name']}")
+            if playlist.edited_this_week(_spotify, lofi['id']):
+                print(f"Ran this week: {x['name']}")
+                continue
+            print('shuffeling...')
+            main(x['id'], x['backup'], x['base'])
+    except SpotifyOauthError as e:
+        # Cached token dead (revoked/expired) — bail with one clear line + non-zero exit
+        # instead of a 40-line traceback in the scheduler log.
+        print(
+            f"\033[91mAUTH FAILED: {e}\033[0m\n"
+            "Re-authorize: sudo docker compose -f "
+            "/mnt/base/config/nas/scripts/autofy.yml run --rm -it autofy python Backup.py"
+        )
+        sys.exit(1)

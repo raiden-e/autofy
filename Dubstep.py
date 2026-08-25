@@ -2,6 +2,8 @@
 import random
 import sys
 
+from spotipy.exceptions import SpotifyOauthError
+
 from util import gist, playlist
 from util.spotify import get_spotify_client
 
@@ -14,29 +16,28 @@ def get_newest_by_artist(artist):
     try:
         # This is bad but i cant get the popularity items otherwise
         artist_albums = _spotify.artist_albums(
-            artist_id=artist, album_type='single,album,compilation')['items']
+            artist_id=artist, album_type="single,album,compilation"
+        )["items"]
     except Exception as e:
         print(f"Could not get latest album for {artist}")
         print(e)
         return False
 
-    artist_albums.sort(key=lambda x: x['release_date'], reverse=True)
+    artist_albums.sort(key=lambda x: x["release_date"], reverse=True)
     latest_release = artist_albums[0]
 
-    if not latest_release["album_type"] == "album":
-        tracks = _spotify.album_tracks(latest_release['uri'])
-        tmp = list(tracks['items'])
+    if latest_release["album_type"] != "album":
+        tracks = _spotify.album_tracks(latest_release["uri"])
+        tmp = list(tracks["items"])
         return tmp
 
-    tracks = _spotify.tracks([x['id'] for x in _spotify.album_tracks(
-        latest_release['uri'])['items']])['tracks']
+    tracks = _spotify.tracks(
+        [x["id"] for x in _spotify.album_tracks(latest_release["uri"])["items"]]
+    )["tracks"]
 
-    sample_amount = random.randint(
-        min(2, len(tracks)),
-        min(5, len(tracks))
-    )
+    sample_amount = random.randint(min(2, len(tracks)), min(5, len(tracks)))
 
-    tracks.sort(key=lambda x: x['popularity'], reverse=True)
+    tracks.sort(key=lambda x: x["popularity"], reverse=True)
 
     return [tracks[first] for first in range(sample_amount)]
 
@@ -51,20 +52,16 @@ def main():
     playlist.clear(_spotify, dubstep_id)
 
     gist_list = gist.load(gist_name)
-    dub_list = gist_list['dubstep']
+    dub_list = gist_list["dubstep"]
 
-    ids = [x['id'] for art in dub_list for x in get_newest_by_artist(art)]
+    ids = [x["id"] for art in dub_list for x in get_newest_by_artist(art)]
 
     # randomize and no doubles
     ids = list(set(ids))
     random.shuffle(ids)
 
     print("adding songs to playlist")
-    playlist.add(
-        _spotify=_spotify,
-        tracks_to_add=ids,
-        playlistId=dubstep_id
-    )
+    playlist.add(_spotify=_spotify, tracks_to_add=ids, playlistId=dubstep_id)
 
 
 def new_artist(artist: str):
@@ -78,22 +75,32 @@ def new_artist(artist: str):
         raise AttributeError(f"Please make sure artist {artist} exists\n", e)
 
     gist_list = gist.load(gist_name)
-    dub_list = gist_list['dubstep']
-    if artist['id'] in dub_list:
+    dub_list = gist_list["dubstep"]
+    if artist["id"] in dub_list:
         print("Artist already in radar")
         return False
-    dub_list.append(artist['id'])
+    dub_list.append(artist["id"])
     dub_list.sort()
-    gist_list['dubstep'] = dub_list
+    gist_list["dubstep"] = dub_list
     print(f"added {artist['name']}")
     gist.update(gist_name, gist_list, f"Add artist: {artist['id']} ({artist['name']})")
     return True
 
 
-if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        main()
-    elif len(sys.argv) == 2:
-        new_artist(sys.argv[1])
-    else:
-        raise AttributeError("Dubstep.py takes up to 1 arg")
+if __name__ == "__main__":
+    try:
+        if len(sys.argv) == 1:
+            main()
+        elif len(sys.argv) == 2:
+            new_artist(sys.argv[1])
+        else:
+            raise AttributeError("Dubstep.py takes up to 1 arg")
+    except SpotifyOauthError as e:
+        # Cached token dead (revoked/expired) — bail with one clear line + non-zero exit
+        # instead of a 40-line traceback in the scheduler log.
+        print(
+            f"\033[91mAUTH FAILED: {e}\033[0m\n"
+            "Re-authorize: sudo docker compose -f "
+            "/mnt/base/config/nas/scripts/autofy.yml run --rm -it autofy python Backup.py"
+        )
+        sys.exit(1)

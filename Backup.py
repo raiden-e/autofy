@@ -1,4 +1,7 @@
+import sys
 from pprint import pformat, pprint
+
+from spotipy.exceptions import SpotifyOauthError
 
 from util import gist, playlist
 from util.spotify import get_spotify_client
@@ -18,17 +21,17 @@ def backup_playlist(pl: dict):
         except Exception as e:
             print(f"  Error fetching playlist {playlist_id}: {e}")
             exceptions.append(e)
-    
+
     if not Get:
-        print(f"  No tracks found in source playlists")
+        print("  No tracks found in source playlists")
         return
-    
+
     Set = playlist.getAsync(_spotify, pl["set"], publicOnly=True)["items"]
     print(f"  Exporting: {pl['set']}")
 
     try:
-        Get = [track for track in Get if track['track']]
-        Set = [track for track in Set if track['track']]
+        Get = [track for track in Get if track["track"]]
+        Set = [track for track in Set if track["track"]]
     except Exception as e:
         print(e)
         exceptions.append(e)
@@ -36,9 +39,9 @@ def backup_playlist(pl: dict):
     Tracks = playlist.deduplify_list(main_list=Get, base_list=Set, ignore=ignore)
 
     if len(Tracks) > 0:
-        ToAdd = [z['track']['uri'] for z in Tracks]
+        ToAdd = [z["track"]["uri"] for z in Tracks]
         try:
-            playlist.addAsync(_spotify, ToAdd, pl['set'])
+            playlist.addAsync(_spotify, ToAdd, pl["set"])
             print(f"Added: {len(ToAdd)}")
             pprint(ToAdd, depth=2)
             msg = "get:\n  " + "\n  ".join([x for x in pl["get"]])
@@ -57,11 +60,13 @@ def main():
         get_list = data["backup"][pl]["get"]
         for gid in list(get_list):
             if not playlist.verify_url(gid):
-                print(f'\033[93mPlaylist {gid} aint legit. imma remove it\033[0m')
+                print(f"\033[93mPlaylist {gid} aint legit. imma remove it\033[0m")
                 get_list.remove(gid)
 
         if len(get_list) == 0:
-            print(f"\033[91mAyo there aint no valid 'get' playlists for {pl}, wth man get rid of this shit!...\033[0m")
+            print(
+                f"\033[91mAyo there aint no valid 'get' playlists for {pl}, wth man get rid of this shit!...\033[0m"
+            )
             continue
 
         if data["backup"][pl]["set"].strip() == "":
@@ -77,12 +82,24 @@ def main():
 
 
 if __name__ == "__main__":
-    _spotify = get_spotify_client()
-    print("Loading autofy.json...")
-    data = gist.load("autofy.json")
-    print("Loading autofy.json completed.")
-    print("Loading Loading ignore list...")
-    ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
-    print("Loading ignore list completed.")
+    try:
+        _spotify = get_spotify_client()
+        print("Loading autofy.json...")
+        data = gist.load("autofy.json")
+        print("Loading autofy.json completed.")
+        print("Loading Loading ignore list...")
+        ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
+        print("Loading ignore list completed.")
+    except SpotifyOauthError as e:
+        # Fatal, and actionable: the cached token is dead (revoked/expired) and can't
+        # be refreshed. No point running — bail with one clear line + non-zero exit so
+        # the scheduler logs a short message instead of a 40-line traceback.
+        print(
+            f"\033[91mAUTH FAILED: {e}\033[0m\n"
+            "Re-authorize: sudo docker compose -f "
+            "/mnt/base/config/nas/scripts/autofy.yml run --rm -it autofy python Backup.py"
+        )
+        sys.exit(1)
+
     exceptions = []
     main()

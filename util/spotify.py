@@ -40,7 +40,10 @@ def get_spotify_client(retries=3, backoff_factor=1) -> spotipy.Spotify:
                 scope=config.SPOTIFY['SCOPE'],
                 redirect_uri=config.SPOTIFY['REDIRECT'],
                 cache_path=get_cache_path(),
-                requests_timeout=10
+                requests_timeout=10,
+                # headless container: print the authorize URL instead of trying to
+                # launch a (non-existent) browser, which silently swallows the link
+                open_browser=False
             ),
             retries=retries,
             backoff_factor=backoff_factor
@@ -65,6 +68,7 @@ def get_new_token():
             scope=config.SPOTIFY['SCOPE'],
             redirect_uri=config.SPOTIFY['REDIRECT'],
             cache_path=get_cache_path(),
-            requests_timeout=10
+            requests_timeout=10,
+            open_browser=False  # headless: print the URL, don't launch a browser
         )
     )

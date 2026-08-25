@@ -1,0 +1,326 @@
+{
+  "unused": {
+    "zzLofi": {
+      "get": [
+        "spotify:playlist:0vvXsWCC9xrXsKd4FyS8kM",
+        "spotify:playlist:74sUjcvpGfdOvCHvgzNEDO",
+        // "spotify:playlist:37i9dQZF1DXc8kgYqQLMfH",
+        // "spotify:playlist:37i9dQZF1DX8Uebhn9wzrS",
+        // "spotify:playlist:37i9dQZF1DX9RwfGbeGQwP",
+        // "spotify:playlist:37i9dQZF1DWZZbwlv3Vmtr",
+        // "spotify:playlist:37i9dQZF1DX0SM0LYsmbMT"
+      ],
+      "set": "spotify:playlist:0wd5N98lZyiNpOm4nQJqc5"
+    },
+    "Discover Weeklys": {
+      "Discover Weekly.backup [37i9dQZEVXcHsDWdL9d5bs]": {
+        "get": [
+          "spotify:playlist:37i9dQZEVXcHsDWdL9d5bs"
+        ],
+        "set": "spotify:playlist:2fCbMT0iikGD9KM028Rw77"
+      },
+      "Discover Weekly.backup [37i9dQZEVXcI24sBIDeWsm]": {
+        "get": [
+          "spotify:playlist:37i9dQZEVXcI24sBIDeWsm"
+        ],
+        "set": "spotify:playlist:33mhyvUP2IDJxKxRR4nfeY"
+      },
+      "Discover Weekly.backup [37i9dQZEVXcSfea91n7yoH]": {
+        "get": [
+          "spotify:playlist:37i9dQZEVXcSfea91n7yoH"
+        ],
+        "set": "spotify:playlist:0nftMMfBYbv0cmltVfFWj4"
+      }
+    },
+    "Release Radar.backup": {
+      "get": [
+        "spotify:playlist:37i9dQZEVXbrA8ZEl7Ur9c"
+      ],
+      "set": "spotify:playlist:3VZoW72hXKVslctOqyvfQu"
+    }
+  },
+  "ignore": "spotify:playlist:7j7nsnsi5tCPlXqOR5zHlT",
+  "backup": {
+    "zzTrappin in Japan": {
+      "get": [
+        "spotify:playlist:5l7pMDOuFANkyHQRvWlIQC",
+        // "spotify:playlist:6ZUqG9zEynTVKBsgbvVikr", // rip High at work
+        "spotify:playlist:4fzHBPVCps1D0tGAu7yW7w"
+      ],
+      "set": "spotify:playlist:0M9SjFcNecW4XlDUSHTIRA"
+    },
+    "computer data's organized list of songs he is currently listening to this week.backup": {
+      "get": [
+        "spotify:playlist:0Qs8fOlcHaXTBtEyY4ydRl"
+      ],
+      "set": "spotify:playlist:3aQO8dvfMRv0F0Q7uDX9R8"
+    },
+    "Drum and Bass Top 100.backup": {
+      "get": [
+        "spotify:playlist:0Zarq4BVkFkZOWkmqsfrjA"
+      ],
+      "set": "spotify:playlist:1woR0mb7hfe2bAdtKZVojc"
+    },
+    "Bass House 2022 \ud83d\udd0a.backup": {
+      "get": [
+        "spotify:playlist:18benb5d6MhXYJA427DV4x"
+      ],
+      "set": "spotify:playlist:5Csz0mUh1hzmosde2IfTsu"
+    },
+    "Dubstep Hits.backup": {
+      "get": [
+        "spotify:playlist:1JRaMQRpvbH2w75lWBMB47"
+      ],
+      "set": "spotify:playlist:6xnLKzc3dBfOMeONC44UVW"
+    },
+    "Drum & Bass Workout.backup": {
+      "get": [
+        "spotify:playlist:3EFKipdqjU96cMxnVWyI9b"
+      ],
+      "set": "spotify:playlist:6aF6H0oRgH3oHk31CYf7pi"
+    },
+    "Techno 247.backup": {
+      "get": [
+        "spotify:playlist:47km1wjUFyMh3LZ1J2R5D7"
+      ],
+      "set": "spotify:playlist:1CxJvYIKxyubc7OscqU2oo"
+    },
+    "Bass Nation.backup": {
+      "get": [
+        "spotify:playlist:4GOnSXcPfwj1rWKcEIc3uu"
+      ],
+      "set": "spotify:playlist:49k1TSaUkSd9dnYWhSS1M2"
+    },
+    "The Blacklist - Drum & Bass by Blackout & Black Sun Empire.backup": {
+      "get": [
+        "spotify:playlist:4nVlNvX17EQWtDmu3ClWl1"
+      ],
+      "set": "spotify:playlist:1FIGyAfS0H4jGXe8G9iPEY"
+    },
+    "UKF Dubstep 2022 \ud83d\udd0a.backup": {
+      "get": [
+        "spotify:playlist:4oluc1u5nMoUItgaO48OxV"
+      ],
+      "set": "spotify:playlist:6KS9R6LAuKJpmluA6mlqK2"
+    },
+    "Liquid Drum and Bass.backup": {
+      "get": [
+        "spotify:playlist:5ABMzUESx7K7EyowE5kFCl"
+      ],
+      "set": "spotify:playlist:58b6MuQSOP0NuvOOf2U9I4"
+    },
+    "Riddim Lords (BeutNoise Takeover).backup": {
+      "get": [
+        "spotify:playlist:5erxMmlA40XOYhivkho100"
+      ],
+      "set": "spotify:playlist:42eO7sv8pp3kiSFXU823im"
+    },
+    "Excision Selections.backup": {
+      "get": [
+        "spotify:playlist:5NehJ2NfXlyWXHglUtNpLG"
+      ],
+      "set": "spotify:playlist:4HR6hVUlYpDDlK5IDGuvZ0"
+    },
+    "Cercle Disco Playlist.backup": {
+      "get": [
+        "spotify:playlist:6m7Q5JuiIb8c159ypSIbaa"
+      ],
+      "set": "spotify:playlist:5umwghIYRWQoeoQmN0oxdJ"
+    },
+    "Drum & Bass Fresh Selections.backup": {
+      "get": [
+        "spotify:playlist:6tlRHSvzXGvmOwLgV2XMHj"
+      ],
+      "set": "spotify:playlist:4qPrevx0EKDljjwpAUe5vA"
+    },
+    "Rap Nation.backup": {
+      "get": [
+        "spotify:playlist:6ZTpgxK6BT92mmsqwETj9l"
+      ],
+      "set": "spotify:playlist:2j9EzCHi3OuSuIcnEa9OEt"
+    },
+    "Tech House 2022.backup": {
+      "get": [
+        "spotify:playlist:7nppx7uLgcmkZHg70HNfOk"
+      ],
+      "set": "spotify:playlist:5xlH74tYtRBskM2fLjqLiI"
+    },
+    // "Cercle Daylight.backup": {
+    //   "get": ["spotify:playlist:4nt2T1IrmnKKC77itHgrDM"],
+    //   "set": "spotify:playlist:1q43vsGz7KRWxaBvQ3Ysfl"
+    // },
+    // "Cercle Night.backup": {
+    //   "get": ["spotify:playlist:3yulLvij07Okh5iKNEjMW0"],
+    //   "set": "spotify:playlist:2Adnd4qrwQYQLsLJOFPLg2"
+    // },
+    // "HARDCORE 💥.backup": {
+    //   "get": ["spotify:playlist:2GEXzPeksIINQMTivWQ2el"],
+    //   "set": "spotify:playlist:3NoWWj9EAliU9hsD3TBXBD"
+    // },
+    // "Cercle Sunset.backup": {
+    //   "get": ["spotify:playlist:7jUYXgsy7R6C2z1LQvMGFC"],
+    //   "set": "spotify:playlist:22gX3xzgMrHx1jLfUSRf08"
+    // },
+    // "Colyn Selection for Cercle.backup": {
+    //   "get": ["spotify:playlist:7L8vDudwPrttfycpzkXJ4G"],
+    //   "set": "spotify:playlist:3OX6tnl38l4Tn6qAQvs6gF"
+    // },
+    // "Cercle Sunrise.backup": {
+    //   "get": ["spotify:playlist:1VcuHXpokIMTWwJg97T1uf"],
+    //   "set": "spotify:playlist:2gPqrnIeeaPfNSTe08bJDd"
+    // },
+    // "Brain Food.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWXLeA8Omikj7"],
+    //   "set": "spotify:playlist:4LefLXAkWKzL0kMd7SSEkt"
+    // },
+    // "Hardstyle Bangers.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX0pH2SQMRXnC"],
+    //   "set": "spotify:playlist:0N09gSfgaUGeN89Hla3NxJ"
+    // },
+    // "Hype.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX4eRPd9frC1m"],
+    //   "set": "spotify:playlist:6M1Dz52yff8Oo74RhKTQxH"
+    // },
+    // "Jump Up!.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX4to60X6goeK"],
+    //   "set": "spotify:playlist:3Uw7nkaLGbaBBSPIzZgcUb"
+    // },
+    // "SLAP!.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX97SIuADeA1Y"],
+    //   "set": "spotify:playlist:0eygJCFKcMRdpHxT7UkkAa"
+    // },
+    // "Tulum Vibes.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX9pP7cC2liKw"],
+    //   "set": "spotify:playlist:7AKXPMg3qPhM85hDvOaEcG"
+    // },
+    // "Altar.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DXa71eg5j9dKZ"],
+    //   "set": "spotify:playlist:4TqAw4gqazU74hMdtJ35Di"
+    // },
+    // "Housewerk.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DXa8NOEUWPn9W"],
+    //   "set": "spotify:playlist:5fcIkP447Iazq6zLpnoAGg"
+    // },
+    // "DOWN LOW.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DXblmY5UIU3v3"],
+    //   "set": "spotify:playlist:2hNBWA45pnJzLz5SugO4SC"
+    // },
+    // "Cercle Records.backup": {
+    //   "get": ["spotify:playlist:34QFbzqAPm83bCJ2Gtxs1c"],
+    //   "set": "spotify:playlist:4vcy5Cy08OSukfKnrbOC8L"
+    // },
+    // "Cercle 2022 Playlist.backup": {
+    //   "get": ["spotify:playlist:0HZhnNN4gCakjh0zTf61Me"],
+    //   "set": "spotify:playlist:2tlh9EwPnPLRBhAADIyzjH"
+    // },
+    // "⚠️ Best New Hard Techno 2022 --- Techno 2022 & Industrial Techno 2022 ⚠️.backup": {
+    //   "get": ["spotify:playlist:0FDNSowO1e6HHMGQqsQR8e"],
+    //   "set": "spotify:playlist:09AFjDMSf1KWZMqR1qpSiu"
+    // },
+    // "Groove Theory.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX1tW4VlEfDSS"],
+    //   "set": "spotify:playlist:5rOimziG0d9ZsFpwBMhsFA"
+    // },
+    // "Deep House Blend.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX5xiztvBdlUf"],
+    //   "set": "spotify:playlist:3zPKOLqQ16SwvB0owyFBtE"
+    // },
+    // "Club Beats.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DXbX3zSzB4MO0"],
+    //   "set": "spotify:playlist:1hYj5FpsxP3nUM2G9y5pB1"
+    // },
+    // "Noises After Dark.backup": {
+    //   "comment": "unused, because it does not exist anymore",
+    //   "get": ["spotify:playlist:37i9dQZF1DX4fxf4OrMhXb"],
+    //   "set": "spotify:playlist:6sOLt4pE7UfWfpTPylCW6K"
+    // },
+    // "Disco Hi-Life.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DXbS8bPVXXR2B"],
+    //   "set": "spotify:playlist:5BNx6TSowHoW4I1uO5H9MH"
+    // },
+    // "Stepping Out.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWYzMfRQj22Nd"],
+    //   "set": "spotify:playlist:5UdRXvWZeCBBvZCJCc5PIE"
+    // },
+    // "Industrial Bass.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX9ilnsFNjAAc"],
+    //   "set": "spotify:playlist:2B8jrHGySnZPVb1HJedG3Q"
+    // },
+    // "Halo.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX5YyEO1dtgbR"],
+    //   "set": "spotify:playlist:6RL07ObCSK9TheP3upEOJC"
+    // },
+    // "Laser Disco.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DX11pUHJdXMnN"],
+    //   "set": "spotify:playlist:3dMpRTh4IYBEKAXUGVmqAN"
+    // },
+    // "One Love.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWSiyIBdVQrkk"],
+    //   "set": "spotify:playlist:5jSOYyZnPedHmNX5TakCh0"
+    // },
+    // "Tantra.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWSlskcBvOTt0"],
+    //   "set": "spotify:playlist:4WXDDd9kfXeLsFJatdBLMS"
+    // },
+    // "Kickass Metal.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWTcqUzwhNmKv"],
+    //   "set": "spotify:playlist:7IItoUjey0t4f9fSAM18nj"
+    // },
+    // "Melodic & Euphoric.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWTiVLKoHQ1yC"],
+    //   "set": "spotify:playlist:1F2RkTHSsAmcOAejNYSQnM"
+    // },
+    // "90s House Classics.backup": {
+    //   "get": ["spotify:playlist:37i9dQZF1DWTU3Zl0elDUa"],
+    //   "set": "spotify:playlist:3fMBz6YBdlhIWHCm3Y7Tpu"
+    // }
+  },
+  "dubstep": [
+    "043Bey7ngSGRFpJftAlKpi",
+    "0D2UenjE1iqoKPLHYsUCSO",
+    "0HaM29XHacJrvlfifL5Wkz",
+    "0mO3Yf5XIPHfAbHh8yWLFk",
+    "0NV5eY4Jzg4ldg2ikGnV4n",
+    "0XW7mqhbaQnRtHmwfAVg64",
+    "12QTVK7jpRYgbe4iDYu9Td",
+    "19h89UGIU0cyc07cYjJ8V1",
+    "19UXV0wgxKQGFcqbYRp8Xv",
+    "1CXuuw8HJhyN80HlNzvL1e",
+    "1jCWoWAWPnItFlOFKoWtem",
+    "1s6bMklFjSRcrMy2FtobWM",
+    "1Uyqa2sdHm1bL5JK4IC4zc",
+    "2DyMQQF5Qlbxr9VSbr3lXt",
+    "2jQWqQ0Z06KiQnysJHn5Mq",
+    "2m8lZUuPm2BLQ2c8gtIAV6",
+    "2tXUcirItGbDNvLpApQT3z",
+    "2u01kCKA5wDvvztuH8lyT0",
+    "2yT7X3Gg2S51DHz67FAYL6",
+    "31DUXycJt0YIBoMXLI5UdV",
+    "3K0GDmmiRwn1Zc7RZzTeAz",
+    "3NJ94iuAmmMjbszODYT6pO",
+    "3P15Zce4qXmoqNeM9lo5OL",
+    "3YLUvWzk9eBm1WrHFlZxM4",
+    "4820AP0lvBGJjSK0PXgZgo",
+    "4a88oLYeDp88PT1XCAxGXd",
+    "4aBx7mA6lUOVhEsjokZrXb",
+    "4FXGRMSHh2JjHxVwS8dhH1",
+    "4Kf9ZowsOBySwBkaUNh2ut",
+    "4SjNQ0BKhGoMT7ot9wljKp",
+    "4xrF8iZCI0XIAg6bqfMydR",
+    "4XV2epRqBjDWBcVbNmSeNo",
+    "5c3akKV3CUqAVOnGZqf4S3",
+    "5FKchcZpQOkqFvXBj1aCvb",
+    "5zYJziKktyqWwmoAWXrShP",
+    "6G1en7nfPSAWElhPgUOy0h",
+    "6GogX1b4LLSXgmtv7Gtw62",
+    "6JvIjkaONqopTk15bnpLjz",
+    "6KqmNCHompcbyvzpesJTYU",
+    "6Ppyyht3tyr034q45RPWVZ",
+    "6wIbmO0mcpIyQ6CFXIJmIy",
+    "6Z8O8PugLuKyLFVkZLQDRZ",
+    "7BSbA70j2g3NqggHScMiYJ",
+    "7dtX3ykcuyVmts2HQnWgSP",
+    "7IyxUmBgkkV4jh7kHoip34",
+    "7MHhTZbxn2XRwXK4s2BFO6"
+  ]
+}

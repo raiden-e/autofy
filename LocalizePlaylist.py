@@ -12,12 +12,12 @@ Options:
     -t, --test         If set, runs in test mode using 'response.json' instead of making API calls (for development/testing purposes)
 """
 
-import time
+import argparse
 import json
 import os
 import re
 import string
-import argparse
+import time
 import unicodedata
 from os.path import join as join_path
 
