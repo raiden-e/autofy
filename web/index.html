@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Autofy Runs</title>
+    <link rel="icon" type="image/webp" href="https://helios.lan/assets/autofy.webp" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="autofy.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div>
+          <h1>Autofy</h1>
+          <p class="sub">Scheduled Spotify scripts &middot; run statistics</p>
+        </div>
+        <div class="top-meta">
+          <span id="generated" class="muted">lade&hellip;</span>
+          <button id="reload" type="button" title="Neu laden">&#8635;</button>
+          <a class="home" href="https://helios.lan">helios.lan</a>
+        </div>
+      </header>
+
+      <div id="banner" class="banner" hidden></div>
+
+      <section id="empty" class="panel empty" hidden>
+        <div class="empty-icon">🎧</div>
+        <h2>Noch keine Runs aufgezeichnet</h2>
+        <p>
+          Statistiken erscheinen nach dem ersten instrumentierten Lauf. Backup.py läuft täglich um 03:00,
+          Dubstep.py und LoFi.py montags um 04:00 / 04:30.
+        </p>
+        <p class="muted">
+          Sofort testen:
+          <code>sudo docker compose -f /mnt/base/config/nas/deploy/autofy.yml run --rm autofy python Backup.py</code>
+        </p>
+      </section>
+
+      <section id="cards" class="cards" aria-label="Letzte Läufe"></section>
+
+      <section id="backup" class="panel" hidden>
+        <div class="panel-head">
+          <h2>Backup.py &middot; Tracks pro Lauf</h2>
+          <div class="seg" id="range" role="group" aria-label="Zeitraum">
+            <button type="button" data-n="14">14</button>
+            <button type="button" data-n="30" class="on">30</button>
+            <button type="button" data-n="90">90</button>
+            <button type="button" data-n="0">alle</button>
+          </div>
+        </div>
+        <div class="kpis" id="kpis"></div>
+        <div class="chart" id="chart-added"></div>
+        <div class="strip-label muted">Status je Lauf</div>
+        <div class="strip" id="strip"></div>
+      </section>
+
+      <section id="targets-panel" class="panel" hidden>
+        <div class="panel-head">
+          <h2>Ziel-Playlists</h2>
+          <span class="muted small">Klick auf eine Zeile filtert die Quellen</span>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl" id="targets">
+            <thead>
+              <tr>
+                <th data-sort="name">Playlist</th>
+                <th data-sort="last_status">Status</th>
+                <th data-sort="range_added" class="num">Tracks (Zeitraum)</th>
+                <th class="spark-col">Verlauf</th>
+                <th data-sort="last_added_at">Zuletzt neu</th>
+                <th data-sort="failing_n" class="num">Quellen</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="sources-panel" class="panel" hidden>
+        <div class="panel-head">
+          <h2>Quell-Playlists</h2>
+          <div class="filters">
+            <span id="target-filter" class="chip" hidden></span>
+            <label><input type="checkbox" id="only-failing" checked /> nur fehlerhafte</label>
+            <label><input type="checkbox" id="show-stale" /> inkl. entfernte</label>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl" id="sources">
+            <thead>
+              <tr>
+                <th>Ziel</th>
+                <th>Quelle</th>
+                <th>Status</th>
+                <th class="num">Fehler in Folge</th>
+                <th>Fehlerhaft seit</th>
+                <th>Letzter Erfolg</th>
+                <th>Letzter Fehler</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="sources-empty" class="muted small" hidden></p>
+      </section>
+
+      <section id="history-panel" class="panel" hidden>
+        <div class="panel-head">
+          <h2>Run-Historie</h2>
+          <div class="filters">
+            <select id="hist-script" aria-label="Skript">
+              <option value="">alle Skripte</option>
+            </select>
+            <select id="hist-status" aria-label="Status">
+              <option value="">alle Status</option>
+              <option value="ok">ok</option>
+              <option value="partial">teilweise</option>
+              <option value="failed">fehlgeschlagen</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="tbl" id="history">
+            <thead>
+              <tr>
+                <th>Start</th>
+                <th>Skript</th>
+                <th>Status</th>
+                <th class="num">Dauer</th>
+                <th class="num">Exit</th>
+                <th class="num">Tracks</th>
+                <th>Fehler</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button type="button" id="hist-more" class="more" hidden>mehr anzeigen</button>
+      </section>
+
+      <footer class="muted small">
+        Daten: <code>data/stats.json</code> aus <code>runs/runs.jsonl</code> (deploy/autofy-stats.py)
+      </footer>
+    </div>
+    <div id="tip" class="tip" role="tooltip" hidden></div>
+    <script src="autofy.js"></script>
+  </body>
+</html>
