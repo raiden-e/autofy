@@ -2,6 +2,8 @@
 
 .vscode/
 logs/
+# run log written by util/runlog.py (dashboard data)
+runs/
 *.jpg
 *.session-journal
 *.session

@@ -4,7 +4,7 @@ import sys
 
 from spotipy.exceptions import SpotifyOauthError
 
-from util import gist, playlist
+from util import gist, playlist, runlog
 from util.spotify import get_spotify_client
 
 dubstep_id = "7lKB7kFwjFjFz2fEGZm82X"
@@ -21,6 +21,7 @@ def get_newest_by_artist(artist):
     except Exception as e:
         print(f"Could not get latest album for {artist}")
         print(e)
+        runlog.source(artist, ok=False, error=e)
         return False
 
     artist_albums.sort(key=lambda x: x["release_date"], reverse=True)
@@ -44,8 +45,10 @@ def get_newest_by_artist(artist):
 
 def main():
     print("To add an artist to the radar, run script with artist uri as argument")
+    runlog.target("Dubstep radar", set_id=dubstep_id)
     if playlist.edited_this_week(_spotify, dubstep_id):
         print("Exiting")
+        runlog.update(status="skipped", reason="already ran this week")
         return
 
     print("clearing playlist")
@@ -62,6 +65,8 @@ def main():
 
     print("adding songs to playlist")
     playlist.add(_spotify=_spotify, tracks_to_add=ids, playlistId=dubstep_id)
+    runlog.update(status="added", added=len(ids))
+    runlog.extra(artists=len(dub_list))
 
 
 def new_artist(artist: str):
@@ -88,19 +93,22 @@ def new_artist(artist: str):
 
 
 if __name__ == "__main__":
-    try:
-        if len(sys.argv) == 1:
-            main()
-        elif len(sys.argv) == 2:
-            new_artist(sys.argv[1])
-        else:
-            raise AttributeError("Dubstep.py takes up to 1 arg")
-    except SpotifyOauthError as e:
-        # Cached token dead (revoked/expired) — bail with one clear line + non-zero exit
-        # instead of a 40-line traceback in the scheduler log.
-        print(
-            f"\033[91mAUTH FAILED: {e}\033[0m\n"
-            "Re-authorize: sudo docker compose -f "
-            "/mnt/base/config/nas/scripts/autofy.yml run --rm -it autofy python Backup.py"
-        )
-        sys.exit(1)
+    # runlog.Run appends one JSON line per run to runs/runs.jsonl (dashboard data)
+    with runlog.Run("Dubstep"):
+        try:
+            if len(sys.argv) == 1:
+                main()
+            elif len(sys.argv) == 2:
+                new_artist(sys.argv[1])
+            else:
+                raise AttributeError("Dubstep.py takes up to 1 arg")
+        except SpotifyOauthError as e:
+            # Cached token dead (revoked/expired) — bail with one clear line + non-zero exit
+            # instead of a 40-line traceback in the scheduler log.
+            runlog.run_error(e, "auth")
+            print(
+                f"\033[91mAUTH FAILED: {e}\033[0m\n"
+                "Re-authorize: sudo docker compose -f "
+                "/mnt/base/config/nas/deploy/autofy.yml run --rm -it autofy python Backup.py"
+            )
+            sys.exit(1)

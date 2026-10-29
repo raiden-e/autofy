@@ -4,7 +4,7 @@ import sys
 
 from spotipy.exceptions import SpotifyOauthError
 
-from util import gist, playlist
+from util import gist, playlist, runlog
 from util.spotify import get_spotify_client
 
 lofi = {
@@ -56,29 +56,35 @@ def main(plid: str, backup: str, base: str):
 
     print("adding songs to playlist")
     playlist.add(_spotify=_spotify, tracks_to_add=weekly_playlistIds, playlistId=plid)
+    runlog.update(status="added", added=len(weekly_playlistIds))
 
 
 if __name__ == "__main__":
-    try:
-        _spotify = get_spotify_client()
-        print("loading gist")
-        data = gist.load("autofy.json")
-        print("loading ignored tracks...")
-        ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
+    # runlog.Run appends one JSON line per run to runs/runs.jsonl (dashboard data)
+    with runlog.Run("LoFi"):
+        try:
+            _spotify = get_spotify_client()
+            print("loading gist")
+            data = gist.load("autofy.json")
+            print("loading ignored tracks...")
+            ignore = playlist.getAsync(_spotify, data["ignore"])["items"]
 
-        for x in (lofi, japan):
-            print(f"Current playlist: {x['name']}")
-            if playlist.edited_this_week(_spotify, lofi['id']):
-                print(f"Ran this week: {x['name']}")
-                continue
-            print('shuffeling...')
-            main(x['id'], x['backup'], x['base'])
-    except SpotifyOauthError as e:
-        # Cached token dead (revoked/expired) — bail with one clear line + non-zero exit
-        # instead of a 40-line traceback in the scheduler log.
-        print(
-            f"\033[91mAUTH FAILED: {e}\033[0m\n"
-            "Re-authorize: sudo docker compose -f "
-            "/mnt/base/config/nas/scripts/autofy.yml run --rm -it autofy python Backup.py"
-        )
-        sys.exit(1)
+            for x in (lofi, japan):
+                print(f"Current playlist: {x['name']}")
+                runlog.target(x['name'], set_id=x['id'])
+                if playlist.edited_this_week(_spotify, lofi['id']):
+                    print(f"Ran this week: {x['name']}")
+                    runlog.update(status="skipped", reason="already ran this week")
+                    continue
+                print('shuffeling...')
+                main(x['id'], x['backup'], x['base'])
+        except SpotifyOauthError as e:
+            # Cached token dead (revoked/expired) — bail with one clear line + non-zero exit
+            # instead of a 40-line traceback in the scheduler log.
+            runlog.run_error(e, "auth")
+            print(
+                f"\033[91mAUTH FAILED: {e}\033[0m\n"
+                "Re-authorize: sudo docker compose -f "
+                "/mnt/base/config/nas/deploy/autofy.yml run --rm -it autofy python Backup.py"
+            )
+            sys.exit(1)
