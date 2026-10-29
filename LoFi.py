@@ -72,7 +72,7 @@ if __name__ == "__main__":
             for x in (lofi, japan):
                 print(f"Current playlist: {x['name']}")
                 runlog.target(x['name'], set_id=x['id'])
-                if playlist.edited_this_week(_spotify, lofi['id']):
+                if playlist.edited_this_week(_spotify, x['id']):
                     print(f"Ran this week: {x['name']}")
                     runlog.update(status="skipped", reason="already ran this week")
                     continue
